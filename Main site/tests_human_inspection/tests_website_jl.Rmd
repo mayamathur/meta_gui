@@ -26,14 +26,22 @@ library(ICC)
 library(MetaUtility)
 library(ggplot2)
 library(boot)
+library(here)
 ```
 
 ### Below tests run on 11/10/20 with github code pull on 11/09/20 at 2:45pm:
 ```{r}
-source("~/Box Sync/jlee/Maya/evalue/EValue/tests/helper_testthat.R")
-source("~/Box Sync/jlee/Maya/evalue/EValue/R/meta-analysis.R")
+setwd(here())
+source("startup.R")
 
-setwd("~/Box Sync/jlee/Maya/evalue/tests_human_inspection/")
+setwd("tests_human_inspection")
+source("helper_testthat.R")
+
+
+# source("~/Box Sync/jlee/Maya/evalue/EValue/tests/helper_testthat.R")
+# source("~/Box Sync/jlee/Maya/evalue/EValue/R/meta-analysis.R")
+# 
+# setwd("~/Box Sync/jlee/Maya/evalue/tests_human_inspection/")
 ```
 
 #### test1 gbc_prepped.csv file
