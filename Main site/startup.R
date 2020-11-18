@@ -1250,6 +1250,7 @@ Tmin_Gmin_CI_lims = function(
         SE.G <<- NA
     })
     
+
     # return as data frame to play well with rowwise() and mutate()
     return( data.frame( lo.T, hi.T, SE.T, lo.G, hi.G, SE.G ) )
 }

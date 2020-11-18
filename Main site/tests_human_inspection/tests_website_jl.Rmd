@@ -457,9 +457,33 @@ sens_plot(method = "parametric",
 knitr::include_graphics("jl_website_test11b.png")
 ```
 
-Add a new chunk by clicking the *Insert Chunk* button on the toolbar or by pressing *Cmd+Option+I*.
 
-When you save the notebook, an HTML file containing the code and output will be saved alongside it (click the *Preview* button or press *Cmd+Shift+K* to preview the HTML file). 
+#### test12 kodama_prepped.csv
+```{r error=TRUE}
+# MM did this one
+d = read.csv("Datasets for website test/kodama_prepped.csv")
 
-The preview shows you a rendered HTML copy of the contents of the editor. Consequently, unlike *Knit*, *Preview* does not run any R code chunks. Instead, the output of the chunk when it was last run in the editor is displayed.
+confounded_meta(method="calibrated",
+                q=log(1.5),
+                r=0.3,
+                tail="below",
+                muB=log(1.5),
+                
+                dat = d, 
+                yi.name = "yi",
+                vi.name = "vi")
+### R output:
+# The confidence interval and/or standard error for the proportion were not estimable via bias-corrected and accelerated bootstrapping. You can try increasing R.
+#   Value      Est        SE CI.lo    CI.hi
+# 1  Prop 0.937500        NA    NA       NA
+# 2  Tmin 1.003351 0.0258029     1 1.131446
+# 3  Gmin 1.061336 0.1212162     1 1.517092
+
+
+```
+
+
+
+
+
 
