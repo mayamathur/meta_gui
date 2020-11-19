@@ -230,11 +230,10 @@ navbarPage( "Sensitivity analysis for unmeasured confounding in meta-analyses", 
                                              "label { font-size: 12px; }"
                                   ),
                                   ### hidden method input used in server.R
-                                  column(width=8, shinyjs::hidden(selectInput('calibrated_method', 'Method (calibrated or parametric)', choices = c('calibrated'), selected = 'calibrated'))
+                                  column(width=12, shinyjs::hidden(selectInput('calibrated_method', 'Method (calibrated or parametric)', choices = c('calibrated'), selected = 'calibrated'))
                                   ),
                                   
-                                  fluidRow(
-                                    shinydashboard::box(width=6,
+                                    shinydashboard::box(width=4,
                                                         title= h4(strong("Upload meta-analysis dataset")),
                                                         column(width=10,
                                                                fileInput('calibrated_uploaddat', label = 'Upload meta-analysis dataset (csv)', accept=c('text/csv',
@@ -243,7 +242,7 @@ navbarPage( "Sensitivity analysis for unmeasured confounding in meta-analyses", 
                                                                  shinyInput_label_embed(
                                                                    shiny_iconlink() %>%
                                                                      bs_embed_popover(title = 'A csv file containing study-level point estimates and variance estimates')),
-                                                               column(width=5,
+                                                               
                                                                       textInput('calibrated_yi.name', "Name of variable in data containing studies' point estimates (log-RR scale)", placeholder = 'yi.name') %>%
                                                                         shinyInput_label_embed(
                                                                           shiny_iconlink() %>%
@@ -252,7 +251,6 @@ navbarPage( "Sensitivity analysis for unmeasured confounding in meta-analyses", 
                                                                         shinyInput_label_embed(
                                                                           shiny_iconlink() %>%
                                                                             bs_embed_popover(title = "Name of variable in data containing studies' variance estimates"))
-                                                               ),
                                                               
                                                         ),
                                                         column(width=10,
@@ -261,7 +259,7 @@ navbarPage( "Sensitivity analysis for unmeasured confounding in meta-analyses", 
                                     ),
                                     shinydashboard::box(width=6,
                                                         title= h4(strong("Specify sensitivity parameters and thresholds")),
-                                                        column(width=10,
+                                                        column(width=6,
                                                                selectInput('calibrated_scale', 'Scale (RR or log-RR)', choices = c('RR', 'Log-RR'), selected = 'RR') %>%
                                                                         shinyInput_label_embed(
                                                                           shiny_iconlink() %>%
@@ -274,10 +272,11 @@ navbarPage( "Sensitivity analysis for unmeasured confounding in meta-analyses", 
                                                                numericInput('calibrated_q', 'Threshold (q) for meaningfully strong effect size \n(on scale you specified)', 0.8, min = 0, max = Inf, step = 0.01) %>%
                                                                  shinyInput_label_embed(
                                                                    shiny_iconlink() %>%
-                                                                     bs_embed_popover(title = 'Effect size that represents the minimum threshold for a meaningfully strong effect size')),
+                                                                     bs_embed_popover(title = 'Effect size that represents the minimum threshold for a meaningfully strong effect size'))
+                                                               ),
                                                                
                                                                
-                                                               
+                                                       column(width=6,
                                                                numericInput('calibrated_r', 'Proportion below which strong effects are to be reduced (r)', 0.1, min = 0, max = 1, step = 0.1) %>%
                                                                  shinyInput_label_embed(
                                                                    shiny_iconlink() %>%
@@ -293,7 +292,7 @@ navbarPage( "Sensitivity analysis for unmeasured confounding in meta-analyses", 
                                                                            bs_embed_popover(title = 'Number of iterates to be used when estimating confidence intervals. We recommend at least 1,000.'))
                                                         )
                                     )
-                                  ),
+                                  ),  ##closes fluidRow
                                   
                                   ### results text ###
                                   wellPanel( textOutput("calibrated_results_prop"), span( textOutput("calibrated_text1") ), shiny_iconlink() %>%
@@ -327,20 +326,26 @@ navbarPage( "Sensitivity analysis for unmeasured confounding in meta-analyses", 
                                   mainPanel(
                                     span( htmlOutput("calibrated_sens_plot_messages"), style="color:red"), width = 8
                                   )
-                                ) 
+                                 
                        ), ### closes tabPanel "Calibrated"
                        
                        tabPanel("Parametric estimation (allows heterogeneous bias)",
+                                dashboardBody(
+                                    tags$style(HTML('
+                                                    
+                                                    .box {margin: 0px;}
+                                                    
+                                                    ')),
                                 fluidRow(
                                   tags$style(type = "text/css",
                                              "label { font-size: 12px; }"
                                   ),
                                   ### hidden method input used in server.R
-                                  column(width=8, shinyjs::hidden(selectInput('parametric_method', 'Method (calibrated or parametric)', choices = c('parametric'), selected = 'parametric'))
+                                  column(width=12, shinyjs::hidden(selectInput('parametric_method', 'Method (calibrated or parametric)', choices = c('parametric'), selected = 'parametric'))
                                   ),
-                                  shinydashboard::box(width=5,
+                                  shinydashboard::box(width=4,
                                                       title= h4(strong("Estimates from confounded meta-analysis")),
-                                                      column(width=6,
+                                                      column(width=10,
                                                              selectInput('parametric_scale', 'Scale (RR or log-RR)', choices = c('RR', 'Log-RR'), selected = 'RR') %>%
                                                                       shinyInput_label_embed(
                                                                         shiny_iconlink() %>%
@@ -350,37 +355,38 @@ navbarPage( "Sensitivity analysis for unmeasured confounding in meta-analyses", 
                                                                shinyInput_label_embed(
                                                                  shiny_iconlink() %>%
                                                                    bs_embed_popover(title = 'The usual estimate of the average effect size in the meta-analysis of the potentially confounded studies, prior to any correction for unmeasured confounding')),
-                                                             numericInput('parametric_se_yr', 'Estimated standard error of pooled effect (optional)', 0.01, min = 0, max = Inf, step = 0.01) %>%
+                                                             numericInput('parametric_vyr', 'Estimated variance of pooled point estimate (optional)', 0.01, min = 0, max = Inf, step = 0.01) %>%
                                                                shinyInput_label_embed(
                                                                  shiny_iconlink() %>%
-                                                                   bs_embed_popover(title = 'The estimated standard error of the pooled point estimate from confounded meta-analysis. Since the meta-analysis should be conducted with the point estimates on the log scale, you should input the standard error as it is reported by your meta-analysis software without taking the log again. If not provided, you will not get confidence intervals for the sensitivity analyses.')),
+                                                                   bs_embed_popover(title = 'The estimated variance of the pooled point estimate from confounded meta-analysis. Since the meta-analysis should be conducted with the point estimates on the log scale, you should input the variance as it is reported by your meta-analysis software without taking the log again. If not provided, you will not get confidence intervals for the sensitivity analyses.')),
                                                              numericInput('parametric_t2', paste0('Estimated heterogeneity (', '\u03c4\u00b2', ')'), 0.10, min = 0, max = Inf, step = 0.1) %>%
                                                                shinyInput_label_embed(
                                                                  shiny_iconlink() %>%
                                                                    bs_embed_popover(title = paste0('The estimated heterogeneity (', '\u03c4\u00b2', ') from the confounded meta-analysis. Since the meta-analysis should be conducted with the point estimates on the log scale, you should input ', '\u03c4\u00b2', ' as it is reported by your meta-analysis software without taking the log again.'))),
-                                                             
-                                                             numericInput('parametric_prop_t2', paste0('Proportion of heterogeneity (', '\u03c4\u00b2', ') due to variation in confounding bias '), .35, min = 0, max = 1, step = .1) %>%
-                                                               shinyInput_label_embed(
-                                                                 shiny_iconlink() %>%
-                                                                   bs_embed_popover(title = paste0('The proportion of the confounded heterogeneity estimate', '\u03c4\u00b2', ' that is thought to be due to variation across studies in confounding bias rather than to genuine effect heterogeneity. This proportion allows to you to specify how variable you think confounding bias is across studies.')))
+                                                             numericInput('parametric_vt2', paste0('Estimated variance of (', '\u03c4\u00b2', ')'), 0.01, min = 0, max = Inf, step = 0.01) %>%
+                                                                 shinyInput_label_embed(
+                                                                     shiny_iconlink() %>%
+                                                                         bs_embed_popover(title = paste0('The estimated variance of (', '\u03c4\u00b2', ') from the confounded meta-analysis. Since the meta-analysis should be conducted with the point estimates on the log scale, you should input ', '\u03c4\u00b2', ' as it is reported by your meta-analysis software without taking the log again.')))
                                                       )
                                   ),
-                                  shinydashboard::box(width=7,
+                                  shinydashboard::box(width=6,
                                                       title= h4(strong("Specify sensitivity parameters and thresholds")),
                                                       column(width=6,
                                                              numericInput('parametric_muB', 'Mean bias factor across studies (on scale you specified)', 1.5, min = 0, max = Inf, step = 0.01) %>%
                                                                shinyInput_label_embed(
                                                                  shiny_iconlink() %>%
                                                                    bs_embed_popover(title = 'Mean bias factor on the chosen scale (RR or log) across studies. To estimate the proportion of effects stronger than q without correction for unmeasured confounding, set to 1.')),
-                                                             numericInput('parametric_sigB', 'Standard deviation of log bias factors', 0, min = 0, max = Inf, step = 0.1) %>%
-                                                               shinyInput_label_embed(
-                                                                 shiny_iconlink() %>%
-                                                                   bs_embed_popover(title = 'Standard deviation of log bias factor across studies. To estimate the proportion of effects stronger than q without correction for unmeasured confounding, set to 0.')),
-                                                             
+                                                             numericInput('parametric_prop_t2', paste0('Proportion of heterogeneity (', '\u03c4\u00b2', ') due to variation in confounding bias '), .35, min = 0, max = 1, step = .1) %>%
+                                                                 shinyInput_label_embed(
+                                                                     shiny_iconlink() %>%
+                                                                         bs_embed_popover(title = paste0('The proportion of the confounded heterogeneity estimate', '\u03c4\u00b2', ' that is thought to be due to variation across studies in confounding bias rather than to genuine effect heterogeneity. This proportion allows to you to specify how variable you think confounding bias is across studies.'))),
                                                              numericInput('parametric_r', 'Proportion below which strong effects are to be reduced (r)', 0.20, min = 0, max = 1, step = 0.1) %>%
-                                                               shinyInput_label_embed(
-                                                                 shiny_iconlink() %>%
-                                                                   bs_embed_popover(title = 'For the second two metrics, the value to which the proportion of meaningfully strong effects is to be reduced')),
+                                                                 shinyInput_label_embed(
+                                                                     shiny_iconlink() %>%
+                                                                         bs_embed_popover(title = 'For the second two metrics, the value to which the proportion of meaningfully strong effects is to be reduced'))
+                                                             ),
+                                                             
+                                                      column(width=6,       
                                                              numericInput('parametric_q', 'Threshold (q) for meaningfully strong effect size (on scale you specified above)', 1.1, min = 0, max = Inf, step = 0.01) %>%
                                                                shinyInput_label_embed(
                                                                  shiny_iconlink() %>%
@@ -392,9 +398,10 @@ navbarPage( "Sensitivity analysis for unmeasured confounding in meta-analyses", 
                                                                    bs_embed_popover(title = 'above for the proportion of effects above q; below for the proportion of effects below q')),
                                                              actionButton(inputId = 'parametric_calculate', label='Analyze')
                                                                    )
-                                                      
                                   )
-                                ),
+                                                      
+                                  
+                                )), ## closes fluidRow and dashboardBody
                                 
                                 ### results text ###
                                 wellPanel( textOutput("parametric_results_prop"), span( textOutput("parametric_text1") ), shiny_iconlink() %>%
