@@ -191,7 +191,7 @@ function(input, output, session) {
   }) 
   
   
-  ##### For Tab Panel Calibrated Fixed sensitivity parameters #####
+  ##### For Tab Panel Calibrated #####
   mydata <- reactive({
     inFile <- input$calibrated_uploaddat
 
@@ -201,42 +201,35 @@ function(input, output, session) {
     tbl <- read.csv(inFile$datapath, stringsAsFactors = FALSE)
   })
 
+  # collect user's input and take logs if needed
   calibrated_output <- observeEvent(input$calibrated_calculate, {
     ### isolate on parameters to not update until action button pressed again
     scale = isolate(input$calibrated_scale)
+    r = isolate(input$calibrated_r)
+    tail = isolate(input$calibrated_tail)
+    yi.name = isolate(input$calibrated_yi.name)
+    vi.name = isolate(input$calibrated_vi.name)
+    method = isolate(input$calibrated_method)
+    R = isolate(input$calibrated_R)
+    dat = isolate(mydata())
+    
     if(scale=="RR"){
       q = isolate(log(input$calibrated_q))
-      r = isolate(input$calibrated_r)
-      tail = isolate(input$calibrated_tail)
       muB = isolate(log(input$calibrated_muB))
-      yi.name = isolate(input$calibrated_yi.name)
-      vi.name = isolate(input$calibrated_vi.name)
-
-      method = isolate(input$calibrated_method)
       Bmin = isolate(log(input$calibrated_Bmin))
       Bmax = isolate(log(input$calibrated_Bmax))
-      R = isolate(input$calibrated_R)
-      dat = isolate(mydata())
 
     } else {
       if(scale=="Log-RR"){
         q = isolate(input$calibrated_q)
-        r = isolate(input$calibrated_r)
-        tail = isolate(input$calibrated_tail)
         muB = isolate(input$calibrated_muB)
-        yi.name = isolate(input$calibrated_yi.name)
-        vi.name = isolate(input$calibrated_vi.name)
-
-        method = isolate(input$calibrated_method)
         Bmin = isolate(input$calibrated_Bmin)
         Bmax = isolate(input$calibrated_Bmax)
-        R = isolate(input$calibrated_R)
-        dat = isolate(mydata())
       }
     }
 
     calibrated_cm <- reactive({
-      withProgress(message="calculating...", value=1,{
+      withProgress(message="Calculating...", value=1,{
         withCallingHandlers({
           shinyjs::html("calibrated_cm_messages", "")
           confounded_meta(method=method, muB=muB,q=q, r=r, yi.name=yi.name, vi.name=vi.name,
@@ -253,11 +246,7 @@ function(input, output, session) {
     }) ## closes calibrated_cm output
 
     output$calibrated_text1 = renderText({
-
-        # MBM: Why call confounded_meta three times for each of Phat, Tmin, and Gmin?
-        #  Can't we just call it once and save all its output?
-        #  Then we wouldn't be doing a redudant round of bootstrapping for Gmin
-        ## jl: fixed w/ reactive cm above; just need to req(calibrated_cm()) for each output
+      
       cm <- req(calibrated_cm())
 
         p = round( as.numeric(cm$Est[which(cm$Value=="Prop")]), 3 )
@@ -309,34 +298,26 @@ function(input, output, session) {
       withProgress(message="generating plot...", value=1,{
         ### isolate on parameters to not update until action button pressed again
         scale = isolate(input$calibrated_scale)
+        r = isolate(input$calibrated_r)
+        tail = isolate(input$calibrated_tail)
+        yi.name = isolate(input$calibrated_yi.name)
+        vi.name = isolate(input$calibrated_vi.name)
+        method = isolate(input$calibrated_method)
+        R = isolate(input$calibrated_R)
+        dat = isolate(mydata())
+        
         if(scale=="RR"){
           q = isolate(log(input$calibrated_q))
-          r = isolate(input$calibrated_r)
-          tail = isolate(input$calibrated_tail)
-          muB = isolate(input$calibrated_muB)
-          yi.name = isolate(input$calibrated_yi.name)
-          vi.name = isolate(input$calibrated_vi.name)
-
-          method = isolate(input$calibrated_method)
+          muB = isolate(log(input$calibrated_muB))
           Bmin = isolate(log(input$calibrated_Bmin))
           Bmax = isolate(log(input$calibrated_Bmax))
-          R = isolate(input$calibrated_R)
-          dat = isolate(mydata())
-
+          
         } else {
           if(scale=="Log-RR"){
-            q = isolate(input$calibrated_q)
-            r = isolate(input$calibrated_r)
-            tail = isolate(input$calibrated_tail)
-            muB = isolate(input$calibrated_muB)
-            yi.name = isolate(input$calibrated_yi.name)
-            vi.name = isolate(input$calibrated_vi.name)
-
-            method = isolate(input$calibrated_method)
-            Bmin = isolate(input$calibrated_Bmin)
-            Bmax = isolate(input$calibrated_Bmax)
-            R = isolate(input$calibrated_R)
-            dat = isolate(mydata())
+            q = isolate(log(input$calibrated_q))
+            muB = isolate(log(input$calibrated_muB))
+            Bmin = isolate(log(input$calibrated_Bmin))
+            Bmax = isolate(log(input$calibrated_Bmax))
           }
         }
 
@@ -375,38 +356,30 @@ function(input, output, session) {
   })
   
   
-  ##### For Tab Panel Parametric Fixed sensitivity parameters #####
+  ##### For Tab Panel Parametric #####
   parametric_output <- observeEvent(input$parametric_calculate, {
     ### isolate on parameters to not update until action button pressed again
     scale_2 = isolate(input$parametric_scale)
+    t2_2 = isolate(input$parametric_t2)
+    vt2_2 = isolate(input$parametric_vt2)
+    vyr_2 = isolate(input$parametric_vyr)
+    sigB_2 = isolate( sqrt( input$parametric_prop_t2*(input$parametric_t2) ) )
+    r_2 = isolate(input$parametric_r)
+    tail_2 = isolate(input$parametric_tail)
+    method_2 = isolate(input$parametric_method)
+    
     if(scale_2=="RR"){
       yr_2 = isolate(log(input$parametric_yr))
-      t2_2 = isolate(input$parametric_t2)
       q_2 = isolate(log(input$parametric_q))
-      vyr_2 = isolate(input$parametric_vyr)
-      vt2_2 = isolate(input$parametric_vt2)
       muB_2 = isolate(log(input$parametric_muB))
-      sigB_2 = isolate(  sqrt(input$parametric_prop_t2*(input$parametric_t2))  )
-      r_2 = isolate(input$parametric_r)
-      tail_2 = isolate(input$parametric_tail)
-
-      method_2 = isolate(input$parametric_method)
       Bmin_2 = isolate(log(input$parametric_Bmin))
       Bmax_2 = isolate(log(input$parametric_Bmax))
 
     } else {
       if(scale_2=="Log-RR"){
         yr_2 = isolate(input$parametric_yr)
-        t2_2 = isolate(input$parametric_t2)
         q_2 = isolate(input$parametric_q)
-        vyr_2 = isolate(input$parametric_vyr)
-        vt2_2 = isolate(input$parametric_vt2)
         muB_2 = isolate(input$parametric_muB)
-        sigB_2 = isolate(  sqrt(input$parametric_prop_t2*(input$parametric_t2))  )
-        r_2 = isolate(input$parametric_r)
-        tail_2 = isolate(input$parametric_tail)
-
-        method_2 = isolate(input$parametric_method)
         Bmin_2 = isolate(input$parametric_Bmin)
         Bmax_2 = isolate(input$parametric_Bmax)
       }
@@ -493,40 +466,30 @@ function(input, output, session) {
     output$parametric_plot1 = renderPlot({
       ### isolate on parameters to not update until action button pressed again
       scale_2 = isolate(input$parametric_scale)
+      t2_2 = isolate(input$parametric_t2)
+      vyr_2 = isolate(input$parametric_vyr)
+      vt2_2 = isolate(input$parametric_vt2)
+      sigB_2 = isolate( sqrt(input$parametric_prop_t2*(input$parametric_t2)) )
+      r_2 = isolate(input$parametric_r)
+      tail_2 = isolate(input$parametric_tail)
+      method_2 = isolate(input$parametric_method)
+      CI.level_2 = 0.95
+      give.CI_2 = TRUE
+      
       if(scale_2=="RR"){
         yr_2 = isolate(log(input$parametric_yr))
-        t2_2 = isolate(input$parametric_t2)
         q_2 = isolate(log(input$parametric_q))
-        vyr_2 = isolate(input$parametric_vyr)
-        vt2_2 = isolate(input$parametric_vt2)
         muB_2 = isolate(log(input$parametric_muB))
-        sigB_2 = isolate(  sqrt(input$parametric_prop_t2*(input$parametric_t2))  )
-        r_2 = isolate(input$parametric_r)
-        tail_2 = isolate(input$parametric_tail)
-
-        method_2 = isolate(input$parametric_method)
         Bmin_2 = isolate(log(input$parametric_Bmin))
         Bmax_2 = isolate(log(input$parametric_Bmax))
-        CI.level_2 = 0.95
-        give.CI_2 = TRUE
 
       } else {
         if(scale_2=="Log-RR"){
           yr_2 = isolate(input$parametric_yr)
-          t2_2 = isolate(input$parametric_t2)
           q_2 = isolate(input$parametric_q)
-          vyr_2 = isolate(input$parametric_vyr)
-          vt2_2 = isolate(input$parametric_vt2)
           muB_2 = isolate(input$parametric_muB)
-          sigB_2 = isolate(  sqrt(input$parametric_prop_t2*(input$parametric_t2))  )
-          r_2 = isolate(input$parametric_r)
-          tail_2 = isolate(input$parametric_tail)
-
-          method_2 = isolate(input$parametric_method)
-          Bmin_2 = isolate(input$parametric_Bmin)
+          Bmin_2 = isolate(input$paramsetric_Bmin)
           Bmax_2 = isolate(input$parametric_Bmax)
-          CI.level_2 = 0.95
-          give.CI_2 = TRUE
         }
       }
 
