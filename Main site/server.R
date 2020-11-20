@@ -208,7 +208,7 @@ function(input, output, session) {
       q = isolate(log(input$calibrated_q))
       r = isolate(input$calibrated_r)
       tail = isolate(input$calibrated_tail)
-      muB = isolate(input$calibrated_muB)
+      muB = isolate(log(input$calibrated_muB))
       yi.name = isolate(input$calibrated_yi.name)
       vi.name = isolate(input$calibrated_vi.name)
 

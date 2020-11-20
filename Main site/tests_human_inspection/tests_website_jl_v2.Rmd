@@ -26,21 +26,21 @@ library(ICC)
 library(MetaUtility)
 library(ggplot2)
 library(boot)
-# library(here)
+library(here)
 ```
 
 ### Below tests run on 11/19/20 with github code pull on 11/19/20:
 ```{r}
-# setwd(here())
-# source("startup.R")
+# make file paths relative so they run on other machines
+setwd(here())
+source("helper_testthat.R")
 
-setwd("~/Box Sync/jlee/Maya/metasens_website/Main site/tests_human_inspection")
+# setwd("~/Box Sync/jlee/Maya/metasens_website/Main site/tests_human_inspection")
 # source("helper_testthat.R")
 
 
 # source("~/Box Sync/jlee/Maya/evalue/EValue/tests/helper_testthat.R")
 # source("~/Box Sync/jlee/Maya/evalue/EValue/R/meta-analysis.R")
-# 
 # setwd("~/Box Sync/jlee/Maya/evalue/tests_human_inspection/")
 ```
 
