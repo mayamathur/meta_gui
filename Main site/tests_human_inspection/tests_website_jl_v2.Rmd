@@ -46,6 +46,9 @@ source("helper_testthat.R")
 
 #### test1 gbc_prepped.csv file
 ```{r  error=TRUE}
+
+# @@MM fix R output
+
 d = read.csv("Datasets for website test/gbc_prepped.csv")
 
 confounded_meta(method="calibrated",
@@ -101,15 +104,24 @@ sens_plot(method="calibrated",
 #   extreme order statistics used as endpoints
 
 ### Website output: 
+
 knitr::include_graphics("jl_website_test2_1b.png")
 ```
 
 #### test2 gbc_prepped.csv file
 ```{r  error=TRUE}
+
+# MM: This test was set up incorrectly. confounded_meta always accepts input on log scale,
+#  so you were muB = 0.5 on LOG scale to confounded_meta but muB = exp(0.5)
+#  to the website.
+#  Accordingly, the Shiny code wasn't handling log vs. RR correctly. I fixed it. 
+#  I fixed the website screenshots to show passing input on both log and RR scales.
+#  Please update the line plot. 
+
 d = read.csv("Datasets for website test/gbc_prepped.csv")
 
 confounded_meta(method="calibrated",
-                q = log(.5),
+                q = log(0.5),
                 r = 0.5,
                 muB = 0.5,
                 tail = "above",
@@ -125,9 +137,13 @@ confounded_meta(method="calibrated",
 # 3  Gmin 3.689005 0.05413210 3.591753 3.812209
 
 
-### Website output: 
-knitr::include_graphics("jl_website_test2_2a.png")
+### Website output (passing on log scale): 
+knitr::include_graphics("test2_2a_log.png")
 
+### Website output (passing on RR scale): 
+knitr::include_graphics("test2_2a_rr.png")
+
+# MM: JL, update this:
 sens_plot(method="calibrated",
           type = "line",
           q = log(.5),
@@ -140,36 +156,19 @@ sens_plot(method="calibrated",
           R = 500)
 
 ### R output:
-# [1] "All values of t are equal to  1 \n Cannot calculate confidence intervals"
 # Some of the pointwise confidence intervals were not estimable via bias-corrected and accelerated bootstrapping, so the confidence band on the plot may not be shown for some values of the bias factor. This usually happens at values with a proportion estimate close to 0 or 1. Otherwise, you can try increasing R.
 # Warning messages:
-# 1: Problem with `mutate()` input `..1`.
-# ℹ extreme order statistics used as endpoints
-# ℹ Input `..1` is `...[]`.
-# ℹ The error occurred in row 2. 
+# 1: In norm.inter(t, adj.alpha) :
+#   extreme order statistics used as endpoints
 # 2: In norm.inter(t, adj.alpha) :
 #   extreme order statistics used as endpoints
-# 3: Problem with `mutate()` input `..1`.
-# ℹ extreme order statistics used as endpoints
-# ℹ Input `..1` is `...[]`.
-# ℹ The error occurred in row 3. 
+# 3: In norm.inter(t, adj.alpha) :
+#   extreme order statistics used as endpoints
 # 4: In norm.inter(t, adj.alpha) :
-#   extreme order statistics used as endpoints
-# 5: Problem with `mutate()` input `..1`.
-# ℹ extreme order statistics used as endpoints
-# ℹ Input `..1` is `...[]`.
-# ℹ The error occurred in row 4. 
-# 6: In norm.inter(t, adj.alpha) :
-#   extreme order statistics used as endpoints
-# 7: Problem with `mutate()` input `..1`.
-# ℹ extreme order statistics used as endpoints
-# ℹ Input `..1` is `...[]`.
-# ℹ The error occurred in row 5. 
-# 8: In norm.inter(t, adj.alpha) :
 #   extreme order statistics used as endpoints
 
 ### Website output: 
-knitr::include_graphics("jl_website_test2_2b.png")
+knitr::include_graphics("test_2a_plot.png")
 ```
 
 #### test3 gbc_prepped.csv file
@@ -191,7 +190,7 @@ confounded_meta(method="calibrated",
  #  dat does not contain a column named vi.name 
 
 ### Website output: 
-knitr::include_graphics("jl_website_test2_3.png")
+knitr::include_graphics("test_3.png")
 ```
 
 #### test4 flegal_prepped.csv file
@@ -217,7 +216,7 @@ confounded_meta(method= "calibrated",
 # 3  Gmin 3.071078 0.06101954 2.985118 3.230871
 
 ### Website output: 
-knitr::include_graphics("jl_website_test2_4a.png")
+knitr::include_graphics("test_4_log.png")
 
 sens_plot(method= "calibrated",
           type = "line",
@@ -235,7 +234,8 @@ sens_plot(method= "calibrated",
 # None of the pointwise confidence intervals were not estimable via bias-corrected and accelerated bootstrapping, so the confidence band on the plot is omitted. You can try increasing R.
 
 ### Website output: 
-knitr::include_graphics("jl_website_test2_4b.png")
+knitr::include_graphics("")
+#bm
 ```
 
 #### test5 flegal_prepped.csv file
@@ -333,6 +333,9 @@ knitr::include_graphics("jl_website_test2_7b.png")
 
 #### test8
 ```{r error=TRUE}
+
+# @@MM: put in error for muB<0
+
 d = read.csv("Datasets for website test/data_calib_test_1-1.csv")
 
 ## parametric method test

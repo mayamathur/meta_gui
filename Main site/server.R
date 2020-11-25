@@ -309,8 +309,8 @@ function(input, output, session) {
         if(scale=="RR"){
           q = isolate(log(input$calibrated_q))
           muB = isolate(log(input$calibrated_muB))
-          Bmin = isolate(log(input$calibrated_Bmin))
-          Bmax = isolate(log(input$calibrated_Bmax))
+          Bmin = isolate(input$calibrated_Bmin)
+          Bmax = isolate(input$calibrated_Bmax)
           
         } else {
           if(scale=="Log-RR"){
