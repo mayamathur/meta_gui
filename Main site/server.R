@@ -309,15 +309,15 @@ function(input, output, session) {
         if(scale=="RR"){
           q = isolate(log(input$calibrated_q))
           muB = isolate(log(input$calibrated_muB))
-          Bmin = isolate(input$calibrated_Bmin)
-          Bmax = isolate(input$calibrated_Bmax)
+          Bmin = isolate(log(input$calibrated_Bmin))
+          Bmax = isolate(log(input$calibrated_Bmax))
           
         } else {
           if(scale=="Log-RR"){
-            q = isolate(log(input$calibrated_q))
-            muB = isolate(log(input$calibrated_muB))
-            Bmin = isolate(log(input$calibrated_Bmin))
-            Bmax = isolate(log(input$calibrated_Bmax))
+            q = isolate(input$calibrated_q)
+            muB = isolate(input$calibrated_muB)
+            Bmin = isolate(input$calibrated_Bmin)
+            Bmax = isolate(input$calibrated_Bmax)
           }
         }
 
@@ -457,7 +457,7 @@ function(input, output, session) {
 
       p = round( cm$Est[ cm$Value=="Prop" ], 3 )
       ifelse(p<0.15 | p>0.85,
-             HTML(paste('WARNING: Extreme estimated proportion', 'The estimated proportion of meaningfully strong effects is <0.15 or >0.85. The methods implemented in this website do not always work well in these situations. We would recommend instead applying alternative methods that have the same interpretation (see the "More Resouces" tab).', sep = "<br/>")), "")
+             HTML(paste('The estimated proportion of meaningfully strong effects is <0.15 or >0.85. Parametric estimation does not always work well in these situations. We would recommend instead using the robust estimation methods in the first tab.', sep = "<br/>")), "")
     }) ## closes parametric_phatwarn_2
 
   }) ## closes parametric_output
