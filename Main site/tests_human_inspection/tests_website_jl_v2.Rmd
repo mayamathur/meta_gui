@@ -17,7 +17,7 @@ editor_options:
 # install.packages("ggplot2")
 library(testthat)
 
-# @@ temp
+ 
 #library(EValue)
 detach("package:EValue", unload = TRUE)
 

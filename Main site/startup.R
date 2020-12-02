@@ -3,7 +3,7 @@
 # install.packages("EValue")
 
 library(shiny)
-#library(EValue) #include confounded_meta and sens_plot below to test, will eventually be loaded into EValue package and can remove the functions below
+library(EValue) #include confounded_meta and sens_plot below to test, will eventually be loaded into EValue package and can remove the functions below
 library(plotly)
 library(shinythemes)
 library(shinyBS)
@@ -332,6 +332,7 @@ confounded_meta = function( method="calibrated",  # for both methods
                                         q = q,
                                         tail = tail,
                                         dat = dat,
+                                        muB.toward.null = muB.toward.null,
                                         yi.name = yi.name,
                                         vi.name = vi.name,
                                         CI.level = CI.level)
@@ -341,7 +342,7 @@ confounded_meta = function( method="calibrated",  # for both methods
             SE.Phat = as.numeric( Phat.CI.lims[3] )
             
             if ( any( is.na( c(lo.Phat, hi.Phat, SE.Phat) ) ) ) {
-                message("The confidence interval and/or standard error for the proportion were not estimable via bias-corrected and accelerated bootstrapping. You can try increasing R.")
+                message("The confidence interval and/or standard error for the proportion were not estimable via bias-corrected and accelerated bootstrapping. You can try increasing the number of bootstrap iterates or choosing a less extreme threshold.")
             }
             
             Tmin.Gmin.CI.lims = Tmin_Gmin_CI_lims( R,
@@ -361,8 +362,8 @@ confounded_meta = function( method="calibrated",  # for both methods
             SE.G = as.numeric( Tmin.Gmin.CI.lims["SE.G"] )
             
             
-            if ( any( is.na( c(lo.T, hi.T, SE.T, lo.G, hi.G, SE.G) ) ) ) {
-                message("The confidence interval and/or standard error for Tmin and Gmin were not estimable via bias-corrected and accelerated bootstrapping. You can try increasing R.")
+            if ( any( is.na( c(lo.T, hi.T, SE.T, lo.G, hi.G, SE.G) ) ) & ( !is.na(Tmin) & Tmin != 1 ) ) {
+                message("The confidence interval and/or standard error for Tmin and Gmin were not estimable via bias-corrected and accelerated bootstrapping. You can try increasing the number of bootstrap iterates or choosing a less extreme threshold.")
             }
             
         }  # closes "if ( !is.na(r) )"
@@ -643,7 +644,7 @@ sens_plot = function(method="calibrated",
                 ##### Warnings About Missing CIs Due to Boot Failures #####
                 # if ALL CI limits are missing
                 if ( all( is.na(res$lo) ) ) {
-                    message( "None of the pointwise confidence intervals was estimable via bias-corrected and accelerated bootstrapping, so the confidence band on the plot is omitted. You can try increasing R." )
+                    message( "None of the pointwise confidence intervals was estimable via bias-corrected and accelerated bootstrapping, so the confidence band on the plot is omitted. You can try increasing the number of bootstrap iterates or choosing a less extreme threshold." )
                     # avoid even trying to plot the CI if it's always NA to avoid geom_ribbon errors later
                     give.CI = FALSE
                 }
@@ -652,7 +653,7 @@ sens_plot = function(method="calibrated",
                 # outer "if" handles case in which AT LEAST ONE CI limit is NA because of boot failures
                 if ( any( !is.na(res$lo) ) & any( !is.na(res$hi) ) ) {
 
-                    message( "Some of the pointwise confidence intervals were not estimable via bias-corrected and accelerated bootstrapping, so the confidence band on the plot may not be shown for some values of the bias factor. This usually happens at values with a proportion estimate close to 0 or 1. Otherwise, you can try increasing R." )
+                    message( "Some of the pointwise confidence intervals were not estimable via bias-corrected and accelerated bootstrapping, so the confidence band on the plot may not be shown for some values of the bias factor. This usually happens at values with a proportion estimate close to 0 or 1. You can try increasing the number of bootstrap iterates or choosing a less extreme threshold." )
 
                     if ( any( res$lo[ !is.na(res$lo) ] > res$Phat[ !is.na(res$lo) ] ) | any( res$hi[ !is.na(res$lo) ] < res$Phat[ !is.na(res$lo) ] ) ) {
 
@@ -1347,6 +1348,136 @@ print.evalue = function( x, ... ) {
 }
 
 
+
+
+
+RR <- function(est) {
+    class(est) <- c("RR", "estimate")
+    est
+}
+
+
+OR <- function(est, rare) {
+    class(est) <- c("OR", "estimate")
+    attr(est, "rare") <- rare
+    est
+}
+
+
+HR <- function(est, rare) {
+    class(est) <- c("HR", "estimate")
+    attr(est, "rare") <- rare
+    est
+}
+
+
+RD <- function(est) {
+    class(est) <- c("RD", "estimate")
+    est
+}
+
+
+OLS <- function(est, sd) {
+    class(est) <- c("OLS", "estimate")
+    attr(est, "sd") <- sd
+    est
+}
+
+
+MD <- function(est) {
+    class(est) <- c("MD", "estimate")
+    est
+}
+
+print.estimate <- function(x, ...) {
+    attr(x, "sd") <- NULL
+    attr(x, "rare") <- NULL
+    attr(x, "history") <- NULL
+    class(x) <- "numeric"
+    print.default(x, ...)
+}
+
+
+summary.estimate <- function(object, ...) {
+    if (is.null(attr(object, "history"))) return(cat(class(object)[1], "=", object))
+    history <- attr(object, "history")
+    cat(class(object)[1], "=", object,
+        "\nThis is an approximate conversion of the original", 
+        history[1,1], "estimate =", history[1,2])
+}
+
+
+toMD <- function(est, delta = 1, ...) {
+    UseMethod("toMD", est)
+}
+
+
+
+
+toMD.OLS <- function(est, delta = 1, ... ) {
+    sd_attr <- attr(est, "sd")
+    
+    if (is.null(sd_attr)) 
+        stop("Must specify the outcome standard deviation. Use argument sd = in the OLS() function")
+    
+    MD <- est * delta / sd_attr
+    class(MD) <- c("MD", "estimate")
+    attr(MD, "history") <- rbind(attr(est, "history"), c("OLS", est))
+    MD
+}
+
+
+toRR.MD <- function(est, ... ) {
+    RR <- exp( 0.91 * est )
+    class(RR) <- c("RR", "estimate")
+    attr(RR, "history") <- rbind(attr(est, "history"), c("MD", est))
+    RR
+}
+
+
+toRR.OLS <- function(est, rare = NULL, delta = 1, ... ) {
+    toRR(toMD(est, delta = delta))
+}
+
+
+toRR.HR <- function(est, rare, ... ) {
+    rare_attr <- attr(est, "rare")
+    
+    if (is.null(rare_attr)) 
+        stop("Must specify whether the rare outcome assumption can be made. Use argument rare = in the HR() function.")
+    
+    if (rare_attr) RR <- est else {
+        RR <- ( 1 - 0.5^sqrt( est ) ) / ( 1 - 0.5^sqrt( 1 / est ) )
+    }
+    class(RR) <- c("RR", "estimate")
+    attr(RR, "history") <- rbind(attr(est, "history"), c("HR", est))
+    RR
+}
+
+
+toRR.OR <- function(est, rare, ... ) {
+    rare_attr <- attr(est, "rare")
+    
+    if (is.null(rare_attr)) 
+        stop("Must specify whether the rare outcome assumption can be made. Use argument rare = in the OR() function.")
+    
+    if (rare_attr) RR <- est else RR <- sqrt(est)
+    class(RR) <- c("RR", "estimate")
+    attr(RR, "history") <- rbind(attr(est, "history"), c("OR", est))
+    RR
+}
+
+
+
+toRR.default <- function(est, ... ) {
+    stop("RR conversion is currently available only for estimates of class \"OR\", \"HR\", \"MD\", and \"OLS\"")
+}
+
+
+
+toMD.default <- function(est, ...) {
+    stop("MD conversion is currently available only for estimates of class \"OLS\"")
+}
 
 
 

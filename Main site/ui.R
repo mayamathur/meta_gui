@@ -45,7 +45,7 @@ navbarPage( "Sensitivity analysis for unmeasured confounding in meta-analyses", 
                                             
                                             "<b>A caveat about the pooled point estimate</b>",
                                             
-                                            'Note that this tab of the website conducts sensitivity analyses that describe evidence strength only in terms of the pooled point estimate, a measure that does not fully characterize effect heterogeneity in a meta-analysis. For example, consider two meta-analyses with the pooled point estimate of relative risk = 1.1. The first, Meta-Analysis A, has very little heterogeneity, such that all true population effects are very close to 1.1. In contrast, despite having the same point estimate, Meta-Analysis B could have substantial heterogeneity, such that a large proportion of the true population effects are of scientifically meaningful size (e.g., >1.2). Thus, Meta-Analysis B provides stronger support for the presence of meaningfully strong effects than does Meta-Analysis A, and furthermore Meta-Analysis B might also suggest that a non-negligible proportion of the effects are actually preventive rather than causative (i.e., with relative risks less than 1). For this reason, meta-analyses that have some heterogeneity should generally report not only the point estimate, but also the estimated percentage of meaningfully strong population effects <a href="https://onlinelibrary.wiley.com/doi/full/10.1002/sim.8057">(Mathur & VanderWeele, 2019).</a>, and sensitivity analyses should consider this quantity as well (which you can do using the tab "Sensitivity analysis for the percentage of meaningfully strong effects").',
+                                            'Note that this tab of the website conducts sensitivity analyses that describe evidence strength only in terms of the pooled point estimate, a measure that does not fully characterize effect heterogeneity in a meta-analysis. For example, consider two meta-analyses with the pooled point estimate of relative risk = 1.1. The first, Meta-Analysis A, has very little heterogeneity, such that all true population effects are very close to 1.1. In contrast, despite having the same point estimate, Meta-Analysis B could have substantial heterogeneity, such that a large proportion of the true population effects are of scientifically meaningful size (e.g., >1.2). Thus, Meta-Analysis B provides stronger support for the presence of meaningfully strong effects than does Meta-Analysis A, and furthermore Meta-Analysis B might also suggest that a non-negligible proportion of the effects are actually preventive rather than causative (i.e., with relative risks less than 1). For this reason, meta-analyses that have some heterogeneity should generally report not only the point estimate, but also the estimated proportion of meaningfully strong population effects <a href="https://onlinelibrary.wiley.com/doi/full/10.1002/sim.8057">(Mathur & VanderWeele, 2019).</a>, and sensitivity analyses should consider this quantity as well (which you can do using the tab "Sensitivity analysis for the proportion of meaningfully strong effects").',
                                             
                                             sep="<br/><br/>"))
                                  
@@ -183,12 +183,12 @@ navbarPage( "Sensitivity analysis for unmeasured confounding in meta-analyses", 
                      ) # end contour plot panel
             ),
             
-            tabPanel("Sensitivity analysis for the percentage of meaningfully strong effects",
+            tabPanel("Sensitivity analysis for the proportion of meaningfully strong effects",
                      shinyjs::useShinyjs(),
                      wellPanel(  HTML(paste(
                        'This website implements the sensitivity analyses described in <a href="https://www.tandfonline.com/doi/full/10.1080/01621459.2018.1529598">Mathur & VanderWeele (2020a)</a> and <a href="https://annals.org/aim/fullarticle/2643434/sensitivity-analysis-observational-research-introducing-e-value">VanderWeele & Ding (2017)</a>.
                        
-                      <br><br><b>Sensitivity analysis for the percentage of meaningfully strong causal effects</b>
+                      <br><br><b>Sensitivity analysis for the proportion of meaningfully strong causal effects</b>
                        
                        <br><br>Here, you can choose a fixed set of sensitivity parameters (the mean of the bias factor distribution and the proportion of the estimated heterogeneity that is due to confounding)
                        and estimate:
@@ -344,7 +344,7 @@ navbarPage( "Sensitivity analysis for unmeasured confounding in meta-analyses", 
                                   column(width=12, shinyjs::hidden(selectInput('parametric_method', 'Method (calibrated or parametric)', choices = c('parametric'), selected = 'parametric'))
                                   ),
                                   shinydashboard::box(width=4,
-                                                      title= h4(strong("Estimates from confounded meta-analysis")),
+                                                      title= h4(strong("Input estimates from confounded meta-analysis")),
                                                       column(width=10,
                                                              selectInput('parametric_scale', 'Scale (RR or log-RR)', choices = c('RR', 'Log-RR'), selected = 'RR') %>%
                                                                       shinyInput_label_embed(
@@ -363,7 +363,7 @@ navbarPage( "Sensitivity analysis for unmeasured confounding in meta-analyses", 
                                                                shinyInput_label_embed(
                                                                  shiny_iconlink() %>%
                                                                    bs_embed_popover(title = paste0('The estimated heterogeneity (', '\u03c4\u00b2', ') from the confounded meta-analysis. Since the meta-analysis should be conducted with the point estimates on the log scale, you should input ', '\u03c4\u00b2', ' as it is reported by your meta-analysis software without taking the log again.'))),
-                                                             numericInput('parametric_vt2', paste0('Estimated variance of (', '\u03c4\u00b2', ')'), NA, min = 0, max = Inf, step = 0.01) %>%
+                                                             numericInput('parametric_vt2', paste0('Estimated variance of ', '\u03c4\u00b2', '  (optional)'), NA, min = 0, max = Inf, step = 0.01) %>%
                                                                  shinyInput_label_embed(
                                                                      shiny_iconlink() %>%
                                                                          bs_embed_popover(title = paste0('The estimated variance of (', '\u03c4\u00b2', ') from the confounded meta-analysis. Since the meta-analysis should be conducted with the point estimates on the log scale, you should input ', '\u03c4\u00b2', ' as it is reported by your meta-analysis software without taking the log again.')))
@@ -387,11 +387,11 @@ navbarPage( "Sensitivity analysis for unmeasured confounding in meta-analyses", 
                                                              ),
                                                              
                                                       column(width=6,       
-                                                             numericInput('parametric_q', 'Threshold (q) for meaningfully strong effect size (on scale you specified above)', NA, min = 0, max = Inf, step = 0.01) %>%
+                                                             numericInput('parametric_q', 'Threshold (q) for meaningfully strong effect size (on scale you specified)', NA, min = 0, max = Inf, step = 0.01) %>%
                                                                shinyInput_label_embed(
                                                                  shiny_iconlink() %>%
                                                                    bs_embed_popover(title = 'Effect size that represents the minimum threshold for a meaningfully strong effect
-                                                                                    size (on scale you specified above)')),
+                                                                                    size (on scale you specified)')),
                                                              selectInput('parametric_tail', 'Tail', choices = c('above', 'below'), selectize = FALSE, size = 2, selected = 'above') %>%
                                                                shinyInput_label_embed(
                                                                  shiny_iconlink() %>%
