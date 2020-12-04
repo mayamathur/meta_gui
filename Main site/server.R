@@ -1,3 +1,4 @@
+
 source("startup.R")
 
 function(input, output, session) {
@@ -233,7 +234,7 @@ function(input, output, session) {
                 muB = isolate(input$calibrated_muB)
                 Bmin = isolate(input$calibrated_Bmin)
                 Bmax = isolate(input$calibrated_Bmax)
-
+                
             }
         }
         
@@ -546,4 +547,3 @@ function(input, output, session) {
     
     
 } ## closes server.R function
-

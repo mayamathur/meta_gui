@@ -1,13 +1,13 @@
 ---
-title: "jl tests_website_v2"
+  title: "jl tests_website_v2"
 output:
   html_document:
-    df_print: paged
+  df_print: paged
 editor_options:
   chunk_output_type: console
 ---
-
-
+  
+  
 ```{r warning=FALSE, message=FALSE, results=FALSE}
 # install.packages("testthat")
 # install.packages("devtools")
@@ -17,7 +17,7 @@ editor_options:
 # install.packages("ggplot2")
 library(testthat)
 
- 
+
 library(EValue)
 # detach("package:EValue", unload = TRUE)
 
@@ -183,8 +183,8 @@ confounded_meta(method="calibrated",
                 dat = d,
                 R = 2000)
 ### R output:
- # Error in Phat_causal(q = q, B = muB, tail = tail, dat = dat, yi.name = yi.name,  : 
- #  dat does not contain a column named vi.name 
+# Error in Phat_causal(q = q, B = muB, tail = tail, dat = dat, yi.name = yi.name,  : 
+#  dat does not contain a column named vi.name 
 
 ### Website output: 
 knitr::include_graphics("test_3.png")
@@ -327,7 +327,7 @@ sens_plot(method="calibrated",
           R = 0)
 
 ### R output:
- # Error in seq.default(Bmin, Bmax, 0.01) : 'from' must be a finite number 
+# Error in seq.default(Bmin, Bmax, 0.01) : 'from' must be a finite number 
 
 ### Website output: 
 knitr::include_graphics("test_7_plot.png")

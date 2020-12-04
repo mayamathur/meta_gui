@@ -1,0 +1,10 @@
+name: pilot_test
+title:
+username:
+account: mmathur
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 3316676
+bundleId: 3916946
+url: https://mmathur.shinyapps.io/pilot_test/
+when: 1606596360.98876
