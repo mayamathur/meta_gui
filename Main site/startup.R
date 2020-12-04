@@ -3,7 +3,6 @@
 # install.packages("EValue")
 
 library(shiny)
-library(EValue) #include confounded_meta and sens_plot below to test, will eventually be loaded into EValue package and can remove the functions below
 library(plotly)
 library(shinythemes)
 library(shinyBS)
@@ -11,8 +10,10 @@ library(shinyalert)
 library(bsplus)
 library(shinydashboard)
 library(shinyWidgets)
-library(MetaUtility)
 
+
+library(EValue) #include confounded_meta and sens_plot below to test, will eventually be loaded into EValue package and can remove the functions below
+library(MetaUtility)
 # try to fix deployment problem
 library(purrr)
 library(plogr)
