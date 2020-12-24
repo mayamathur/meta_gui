@@ -21,7 +21,12 @@ navbarPage( "Sensitivity analysis for unmeasured confounding in meta-analyses", 
             theme = shinytheme("flatly"),
             
             tabPanel("Sensitivity analysis for the point estimate",
-                     wellPanel(  HTML(paste('This website implements the sensitivity analyses described in <a href="https://www.tandfonline.com/doi/full/10.1080/01621459.2018.1529598">Mathur & VanderWeele (2020a)</a> and <a href="https://annals.org/aim/fullarticle/2643434/sensitivity-analysis-observational-research-introducing-e-value">VanderWeele & Ding (2017)</a>.',
+                     
+                     checkboxInput( 'show_instructions_1', 'Show instructions', FALSE ),
+                     
+                     
+                     conditionalPanel(  condition = "input.show_instructions_1 == true",
+                                        HTML(paste('This website implements the sensitivity analyses described in <a href="https://www.tandfonline.com/doi/full/10.1080/01621459.2018.1529598">Mathur & VanderWeele (2020a)</a> and <a href="https://annals.org/aim/fullarticle/2643434/sensitivity-analysis-observational-research-introducing-e-value">VanderWeele & Ding (2017)</a>.',
                                             
                                             
                                             "<b>Sensitivity analysis for the pooled point estimate</b>",
@@ -188,6 +193,8 @@ navbarPage( "Sensitivity analysis for unmeasured confounding in meta-analyses", 
             ),
             
             width=6,
+
+#bm: add spacer here
             
             mainPanel(
                 selectInput( "outcomeType", label = "Outcome type",
@@ -317,10 +324,18 @@ navbarPage( "Sensitivity analysis for unmeasured confounding in meta-analyses", 
                 
             ) # end contour plot panel
             ),
+
+                         
             
             tabPanel("Sensitivity analysis for the percentage of meaningfully strong effects",
                      shinyjs::useShinyjs(),
-                     wellPanel(  HTML(paste(
+                     
+                     checkboxInput( 'show_instructions_2', 'Show instructions', FALSE ),
+                     
+                     
+                     conditionalPanel(  condition = "input.show_instructions_2 == true",
+                                        HTML(paste(
+             
                          'This website implements the sensitivity analyses described in <a href="https://www.tandfonline.com/doi/full/10.1080/01621459.2018.1529598">Mathur & VanderWeele (2020a)</a> and <a href="https://annals.org/aim/fullarticle/2643434/sensitivity-analysis-observational-research-introducing-e-value">VanderWeele & Ding (2017)</a>.
                        
                       <br><br><b>Sensitivity analysis for the proportion of meaningfully strong causal effects</b>
@@ -352,7 +367,7 @@ navbarPage( "Sensitivity analysis for unmeasured confounding in meta-analyses", 
 
                        <br><br><b>When these methods should be used</b>
                        
-                       <br><br>These methods perform well only in meta-analyses with at least 10 studies; we do not recommend reporting them in smaller meta-analyses. Additionally, it only makes sense to consider proportions of effects stronger than a threshold when the heterogeneity estimate is greater than 0. For meta-analyses with fewer than 10 studies or with a heterogeneity estimate of 0, you can simply report E-values for the point estimate using the tab "Sensitivity analysis for the point estimate".'
+                       <br><br>These methods perform well only in meta-analyses with at least 10 studies; we do not recommend reporting them in smaller meta-analyses. Additionally, it only makes sense to consider proportions of effects stronger than a threshold when the heterogeneity estimate is greater than 0. For meta-analyses with fewer than 10 studies or with a heterogeneity estimate of 0, you can simply report E-values for the point estimate using the tab "Sensitivity analysis for the point estimate".\n\n'
                        
                      ) )
                      ),

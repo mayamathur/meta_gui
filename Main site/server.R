@@ -243,7 +243,7 @@ function(input, output, session) {
                 withCallingHandlers({
                     shinyjs::html("calibrated_cm_messages", "")
                     confounded_meta(method=method, muB=muB,q=q, r=r, yi.name=yi.name, vi.name=vi.name,
-                                    tail=tail, give.CI=TRUE, R=R, dat=dat)
+                                    tail=tail, give.CI=TRUE, R=R, dat=dat, simplifyWarnings = TRUE)
                 },
                 message = function(m){
                     shinyjs::html(id="calibrated_cm_messages", html=paste0(m$message, '<br>'), add=TRUE)
@@ -407,7 +407,7 @@ function(input, output, session) {
             withCallingHandlers({
                 shinyjs::html("parametric_cm_messages", "")
                 confounded_meta(method=method_2,q=q_2, r=r_2, muB=muB_2, sigB=sigB_2, yr=yr_2, vyr=vyr_2,
-                                t2=t2_2, vt2=vt2_2, CI.level=0.95, tail=tail_2)
+                                t2=t2_2, vt2=vt2_2, CI.level=0.95, tail=tail_2, simplifyWarnings = TRUE)
             },
             message = function(m){
                 shinyjs::html(id="parametric_cm_messages", html=paste0(m$message, '<br>'), add=TRUE)
@@ -476,7 +476,7 @@ function(input, output, session) {
             
             p = round( cm$Est[ cm$Value=="Prop" ], 3 )
             ifelse(p<0.15 | p>0.85,
-                   HTML(paste('WARNING: Extreme estimated proportion', 'The estimated proportion of meaningfully strong effects is <0.15 or >0.85. The methods implemented in this website do not always work well in these situations. We would recommend instead applying alternative methods that have the same interpretation (see the "More Resouces" tab).', sep = "<br/>")), "")
+                   HTML(paste('WARNING: Extreme estimated proportion', 'The estimated proportion of meaningfully strong effects is <0.15 or >0.85. We recommend using the robust estimation method instead in this case.', sep = "<br/>")), "")
         }) ## closes parametric_phatwarn_2
         
     }) ## closes parametric_output
