@@ -1,13 +1,13 @@
 ---
-title: "jl tests_website_v2"
+  title: "jl tests_website_v2"
 output:
   html_document:
-    df_print: paged
+  df_print: paged
 editor_options:
   chunk_output_type: console
 ---
-
-
+  
+  
 ```{r warning=FALSE, message=FALSE, results=FALSE}
 # install.packages("testthat")
 # install.packages("devtools")
@@ -17,9 +17,9 @@ editor_options:
 # install.packages("ggplot2")
 library(testthat)
 
- 
-#library(EValue)
-detach("package:EValue", unload = TRUE)
+
+library(EValue)
+# detach("package:EValue", unload = TRUE)
 
 library(devtools)
 library(dplyr)
@@ -34,7 +34,7 @@ library(here)
 ```{r}
 # make file paths relative so they run on other machines
 setwd(here())
-source("helper_testthat.R")
+source("tests_human_inspection/helper_testthat.R")
 
 # setwd("~/Box Sync/jlee/Maya/metasens_website/Main site/tests_human_inspection")
 # source("helper_testthat.R")
@@ -53,8 +53,11 @@ source("helper_testthat.R")
 # Please fix that so it throws confounded_meta's error
 # Then please update the plot as well
 
-d = read.csv("Datasets for website test/gbc_prepped.csv")
+## jl something weird going on here -- seems like sometimes it gives the MM error below and sometimes gives the "arguments imply differing number of rows: 1, 0" when just re-running the same code:
 
+d = read.csv("tests_human_inspection/Datasets for website test/gbc_prepped.csv", stringsAsFactors = FALSE)
+
+# note: log(0.9) = -0.04575749056
 confounded_meta(method="calibrated",
                 q = log(.9),
                 r = 0.1,
@@ -70,7 +73,7 @@ confounded_meta(method="calibrated",
 # Prop is already less than or equal to r even with no confounding, so Tmin and Gmin are simply equal to 1. No confounding at all is required to make the specified shift.
 
 ### Website output: 
-knitr::include_graphics("jl_website_test2_1a.png")
+knitr::include_graphics("test_1a.png")
 
 
 sens_plot(method="calibrated",
@@ -108,12 +111,12 @@ sens_plot(method="calibrated",
 
 ### Website output: 
 
-knitr::include_graphics("jl_website_test2_1b.png")
+knitr::include_graphics("test_1b.png")
 ```
 
 #### test2 gbc_prepped.csv file - correct
 ```{r  error=TRUE}
-d = read.csv("Datasets for website test/gbc_prepped.csv")
+d = read.csv("tests_human_inspection/Datasets for website test/gbc_prepped.csv")
 
 confounded_meta(method="calibrated",
                 q = log(0.5),
@@ -133,10 +136,10 @@ confounded_meta(method="calibrated",
 
 
 ### Website output (passing on log scale): 
-knitr::include_graphics("test2_2a_log.png")
+knitr::include_graphics("test_2a_log.png")
 
 ### Website output (passing on RR scale): 
-knitr::include_graphics("test2_2a_rr.png")
+knitr::include_graphics("test_2a_rr.png")
 
 # MM: JL, update this:
 sens_plot(method="calibrated",
@@ -168,7 +171,7 @@ knitr::include_graphics("test_2a_plot.png")
 
 #### test3 gbc_prepped.csv file - correct
 ```{r error=TRUE}
-d = read.csv("Datasets for website test/gbc_prepped.csv")
+d = read.csv("tests_human_inspection/Datasets for website test/gbc_prepped.csv")
 
 ## get error for column name
 confounded_meta(method="calibrated",
@@ -181,8 +184,8 @@ confounded_meta(method="calibrated",
                 dat = d,
                 R = 2000)
 ### R output:
- # Error in Phat_causal(q = q, B = muB, tail = tail, dat = dat, yi.name = yi.name,  : 
- #  dat does not contain a column named vi.name 
+# Error in Phat_causal(q = q, B = muB, tail = tail, dat = dat, yi.name = yi.name,  : 
+#  dat does not contain a column named vi.name 
 
 ### Website output: 
 knitr::include_graphics("test_3.png")
@@ -190,7 +193,7 @@ knitr::include_graphics("test_3.png")
 
 #### test4 flegal_prepped.csv file - correct
 ```{r error=TRUE}
-d = read.csv("Datasets for website test/flegal_prepped.csv")
+d = read.csv("tests_human_inspection/Datasets for website test/flegal_prepped.csv")
 
 ## on log-RR scale:
 # log(.5)
@@ -237,9 +240,8 @@ knitr::include_graphics("test_4_plot_rr.png")
 
 #### test5 flegal_prepped.csv file - correct
 ```{r error=TRUE}
-d = read.csv("Datasets for website test/flegal_prepped.csv")
+d = read.csv("tests_human_inspection/Datasets for website test/flegal_prepped.csv")
 
-## extreme R?
 confounded_meta(method="calibrated",
                 q = log(.5),
                 r = 0.1,
@@ -253,8 +255,8 @@ confounded_meta(method="calibrated",
 # The confidence interval and/or standard error for the proportion were not estimable via bias-corrected and accelerated bootstrapping. You can try increasing R.
 #   Value      Est         SE    CI.lo    CI.hi
 # 1  Prop 1.000000         NA       NA       NA
-# 2  Tmin 2.177725 0.08646707 2.066321 2.353844
-# 3  Gmin 3.779212 0.17689797 3.550693 4.138987
+# 2  Tmin 2.177725 0.08650298 2.065633 2.354270
+# 3  Gmin 3.779212 0.17699847 3.549279 4.139856
 
 ### Website output: 
 # pass on log scale
@@ -266,7 +268,7 @@ knitr::include_graphics("test_5_rr.png")
 
 #### test6 flegal_prepped.csv file  - correct
 ```{r error=TRUE}
-d = read.csv("Datasets for website test/flegal_prepped.csv")
+d = read.csv("tests_human_inspection/Datasets for website test/flegal_prepped.csv")
 
 confounded_meta(method="calibrated",
                 q = log(1.2),
@@ -289,7 +291,7 @@ knitr::include_graphics("test_6_rr.png")
 
 #### test7 data_calib_test_1-1.csv file - correct
 ```{r error=TRUE}
-d = read.csv("Datasets for website test/data_calib_test_1-1.csv")
+d = read.csv("tests_human_inspection/Datasets for website test/data_calib_test_1-1.csv")
 
 ## an example with crazy input
 confounded_meta(method="calibrated",
@@ -326,13 +328,13 @@ sens_plot(method="calibrated",
           R = 0)
 
 ### R output:
- # Error in seq.default(Bmin, Bmax, 0.01) : 'from' must be a finite number 
+# Error in seq.default(Bmin, Bmax, 0.01) : 'from' must be a finite number 
 
 ### Website output: 
 knitr::include_graphics("test_7_plot.png")
 ```
 
-#### test8 - for JL to fix
+#### test8 - for JL to fix; fixed
 ```{r error=TRUE}
 ## parametric method test
 confounded_meta(method="parametric",
@@ -358,6 +360,7 @@ knitr::include_graphics("test_8_rr.png")
 # @@MM: JL, fix this please:
 # "non-numeric argument to mathematical function"
 # this happens with the plot when passing on log scale
+# @@JL: fixed, there was a typo in the variable call
 knitr::include_graphics("test_8_log.png")
 
 
@@ -386,6 +389,7 @@ knitr::include_graphics("test_8_plot_rr.png")
 # @@JL, fix this please:
 # "non-numeric input"
 # does not match confounded_meta
+# @@JL: fixed, there was a typo in the variable call
 knitr::include_graphics("test_8_plot_log.png")
 ```
 
@@ -408,7 +412,7 @@ confounded_meta(method="parametric",
 #   Must have t2 > sigB^2
 
 ### Website output: 
-knitr::include_graphics("jl_website_test2_9.png")
+knitr::include_graphics("test_9.png")
 ```
 
 
@@ -417,6 +421,7 @@ knitr::include_graphics("jl_website_test2_9.png")
 # @@MM: This one previously had Tmin<1. This wasn't wrong because it represents bias in the 
 #  other direction, but for clarity I changed the package output to by definition set Tmin=Gmin=1
 #  in these cases. Now these are not being displayed on the app at all, maybe becuase their CIs are [NA, NA]. 
+# @@JL: we currently have in the app that if p < r it outputs the  "Not applicable. This is already the case, even with no bias, given your pooled effect size, threshold, and choice of tail." message...is this incorrect?
 confounded_meta(method="parametric",
                 q=log(.5),
                 r=0.75,
@@ -438,7 +443,7 @@ confounded_meta(method="parametric",
 #   Prop is close to 0 or 1. We recommend choosing method = "calibrated" or alternatively using bias-corrected and accelerated bootstrapping to estimate all inference in this case.
 
 ### Website output: 
-knitr::include_graphics("jl_website_test2_10a.png")
+knitr::include_graphics("test_10a.png")
 
 
 sens_plot(method = "parametric",
@@ -459,11 +464,11 @@ sens_plot(method = "parametric",
 #   Calculating parametric confidence intervals in the plot. For values of Phat that are less than 0.15 or greater than 0.85, these confidence intervals may not perform well.
 
 ### Website output: 
-knitr::include_graphics("jl_website_test2_10b.png")
+knitr::include_graphics("test_10b.png")
 ```
 
 
-#### test11 - for JL to fix
+#### test11 - for JL to fix; fixed
 ```{r error=TRUE}
 ## on log-RR scale
 # log(1.2)
@@ -485,9 +490,10 @@ confounded_meta(method="parametric",
 # 3  Gmin 1.7505582 1.3174664 1.0000000 4.3327449
 
 ### Website output: 
-knitr::include_graphics("jl_website_test2_11a.png")
+knitr::include_graphics("test_11a.png")
 
 #@@MM: This also has the "non-numeric argument to mathematical function" error
+#@@JL: fixed
 sens_plot(method = "parametric",
           type="line",
           q=0.1823216,
@@ -506,14 +512,14 @@ sens_plot(method = "parametric",
 #   Calculating parametric confidence intervals in the plot. For values of Phat that are less than 0.15 or greater than 0.85, these confidence intervals may not perform well.
 
 ### Website output: 
-knitr::include_graphics("jl_website_test2_11b.png")
+knitr::include_graphics("test_11b.png")
 ```
 
 
 #### test12 kodama_prepped.csv - correct
 ```{r error=TRUE}
 # MM did this one
-d = read.csv("Datasets for website test/kodama_prepped.csv")
+d = read.csv("tests_human_inspection/Datasets for website test/kodama_prepped.csv")
 
 confounded_meta(method="calibrated",
                 q=log(1.5),

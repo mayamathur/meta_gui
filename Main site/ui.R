@@ -1,3 +1,4 @@
+
 source("startup.R")
 
 ### CHANGE THIS ###
@@ -45,145 +46,279 @@ navbarPage( "Sensitivity analysis for unmeasured confounding in meta-analyses", 
                                             
                                             "<b>A caveat about the pooled point estimate</b>",
                                             
-                                            'Note that this tab of the website conducts sensitivity analyses that describe evidence strength only in terms of the pooled point estimate, a measure that does not fully characterize effect heterogeneity in a meta-analysis. For example, consider two meta-analyses with the pooled point estimate of relative risk = 1.1. The first, Meta-Analysis A, has very little heterogeneity, such that all true population effects are very close to 1.1. In contrast, despite having the same point estimate, Meta-Analysis B could have substantial heterogeneity, such that a large proportion of the true population effects are of scientifically meaningful size (e.g., >1.2). Thus, Meta-Analysis B provides stronger support for the presence of meaningfully strong effects than does Meta-Analysis A, and furthermore Meta-Analysis B might also suggest that a non-negligible proportion of the effects are actually preventive rather than causative (i.e., with relative risks less than 1). For this reason, meta-analyses that have some heterogeneity should generally report not only the point estimate, but also the estimated proportion of meaningfully strong population effects <a href="https://onlinelibrary.wiley.com/doi/full/10.1002/sim.8057">(Mathur & VanderWeele, 2019).</a>, and sensitivity analyses should consider this quantity as well (which you can do using the tab "Sensitivity analysis for the proportion of meaningfully strong effects").',
+                                            'Note that this tab of the website conducts sensitivity analyses that describe evidence strength only in terms of the pooled point estimate, a measure that does not fully characterize effect heterogeneity in a meta-analysis. For example, consider two meta-analyses with the pooled point estimate of relative risk = 1.1. The first, Meta-Analysis A, has very little heterogeneity, such that all true population effects are very close to 1.1. In contrast, despite having the same point estimate, Meta-Analysis B could have substantial heterogeneity, such that a large proportion of the true population effects are of scientifically meaningful size (e.g., >1.2). Thus, Meta-Analysis B provides stronger support for the presence of meaningfully strong effects than does Meta-Analysis A, and furthermore Meta-Analysis B might also suggest that a non-negligible proportion of the effects are actually preventive rather than causative (i.e., with relative risks less than 1). For this reason, meta-analyses that have some heterogeneity should generally report not only the point estimate, but also the estimated percentage of meaningfully strong population effects <a href="https://onlinelibrary.wiley.com/doi/full/10.1002/sim.8057">(Mathur & VanderWeele, 2019).</a>, and sensitivity analyses should consider this quantity as well (which you can do using the tab "Sensitivity analysis for the percentage of meaningfully strong effects").',
                                             
                                             sep="<br/><br/>"))
                                  
                                  
-                     ),
-                     
-                     width=6,
-                     
-                     mainPanel(
-                         selectInput( "outcomeType", label = "Outcome type",
-                                      choices = c( "Relative risk / rate ratio" = "RR", 
-                                                   "Odds ratio (outcome prevalence <15%)" = "OR.rare",
-                                                   "Odds ratio (outcome prevalence >15%)" = "OR.com",
-                                                   "Hazard ratio (outcome prevalence <15%)" = "HR.rare",
-                                                   "Hazard ratio (outcome prevalence >15%)" = "HR.com",
-                                                   "Standardized mean difference (d)" = "MD", 
-                                                   "Risk difference" = "RD",
-                                                   "Linear regression coefficient" = "OLS" ) ),
-                         
-                         
-                         # conditional panels that appear depending on selected outcome type
-                         
-                         conditionalPanel(
-                             condition = "input.outcomeType == 'RR' ",
-                             
-                             numericInput('est.RR', 'Point estimate', NA, min = 1, max = 9),
-                             numericInput('lo.RR', 'Confidence interval lower limit', NA, min = 1, max = 9),
-                             numericInput('hi.RR', 'Confidence interval upper limit', NA, min = 1, max = 9),
-                             numericInput('trueRR', 'True causal effect to which to shift estimate (default: null)', 1, min = 1, max = 9) 
-                         ) ,
-                         
-                         conditionalPanel(
-                             
-                             condition = "input.outcomeType == 'OR.rare' ",
-                             
-                             numericInput('est.OR.rare', 'Point estimate', NA, min = 1, max = 9),
-                             numericInput('lo.OR.rare', 'Confidence interval lower limit', NA, min = 1, max = 9),
-                             numericInput('hi.OR.rare', 'Confidence interval upper limit', NA, min = 1, max = 9),
-                             numericInput('trueORrare', 'True causal effect to which to shift estimate (default: null)', 1, min = 1, max = 9)
-                         ),
-                         
-                         conditionalPanel(
-                             condition = "input.outcomeType == 'OR.com' ",
-                             
-                             numericInput('est.OR.com', 'Point estimate', NA, min = 1, max = 9),
-                             numericInput('lo.OR.com', 'Confidence interval lower limit', NA, min = 1, max = 9),
-                             numericInput('hi.OR.com', 'Confidence interval upper limit', NA, min = 1, max = 9),
-                             numericInput('trueORcom', 'True causal effect to which to shift estimate (default: null)', 1, min = 1, max = 9)
-                         ),
-                         
-                         conditionalPanel(
-                             condition = "input.outcomeType == 'HR.rare' ",
-                             
-                             numericInput('est.HR.rare', 'Point estimate', NA, min = 1, max = 9),
-                             numericInput('lo.HR.rare', 'Confidence interval lower limit', NA, min = 1, max = 9),
-                             numericInput('hi.HR.rare', 'Confidence interval upper limit', NA, min = 1, max = 9),
-                             numericInput('trueHRrare', 'True causal effect to which to shift estimate (default: null)', 1, min = 1, max = 9)
-                         ),
-                         
-                         conditionalPanel(
-                             condition = "input.outcomeType == 'HR.com' ",
-                             
-                             numericInput('est.HR.com', 'Point estimate', NA, min = 1, max = 9),
-                             numericInput('lo.HR.com', 'Confidence interval lower limit', NA, min = 1, max = 9),
-                             numericInput('hi.HR.com', 'Confidence interval upper limit', NA, min = 1, max = 9),
-                             numericInput('trueHRcom', 'True causal effect to which to shift estimate (default: null)', 1, min = 1, max = 9)
-                         ),
-                         
-                         conditionalPanel(
-                             condition = "input.outcomeType == 'OLS' ",
-                             numericInput('estOLS', 'Regression coefficient estimate', NA, min = 1, max = 9),
-                             numericInput('seOLS', 'Standard error of coefficient', NA, min = 1, max = 9),
-                             numericInput('sdOLS', 'Standard deviation of outcome', NA, min = 1, max = 9),
-                             numericInput('deltaOLS', 'Contrast of interest in exposure', 1, min = 1, max = 9),
-                             numericInput('trueOLS', 'True causal effect to which to shift estimate (on standard mean difference scale; default: null)', 0, min = 1, max = 9)
-                         ),
-                         
-                         conditionalPanel(
-                             condition = "input.outcomeType == 'MD' ",
-                             
-                             numericInput('est.MD', 'Point estimate', 0, min = 1, max = 9),
-                             numericInput('se.MD', 'Standard error', NA, min = 1, max = 9),
-                             numericInput('trueMD', 'True causal effect to which to shift estimate (default: null)', 0, min = 1, max = 9)
-                         ),
-                         
-                         conditionalPanel(
-                             condition = "input.outcomeType == 'RD' ",
-                             
-                             numericInput('n11', 'Number of exposed, diseased individuals', NA, min = 1, max = 9),
-                             numericInput('n10', 'Number of exposed, non-diseased individuals', NA, min = 1, max = 9),
-                             numericInput('n01', 'Number of unexposed, diseased individuals', NA, min = 1, max = 9),
-                             numericInput('n00', 'Number of unexposed, non-diseased individuals', NA, min = 1, max = 9),
-                             numericInput('alpha', 'Alpha level for confidence interval', 0.05, min = 1, max = 9),
-                             numericInput('grid', 'Spacing for grid search of E-value', 0.0001, min = 1, max = 9),
-                             numericInput('trueRD', 'True causal effect to which to shift estimate (default: null)', 0, min = 1, max = 9)
-                         ),
-                         
-                         # display results
-                         wellPanel(  span( textOutput("result.text") ) ), 
-                         
-                         # warnings if computing non-null E-value
-                         # note: because the condition is in Javascript, have to use period instead of dollar sign to 
-                         #  access arguments, so CANNOT have period in the variable names (e.g., "true.RR" doesn't work!)
-                         conditionalPanel( condition = "input.outcomeType == 'RR' & input.trueRR != 1", nonnull.mess),
-                         conditionalPanel( condition = "input.outcomeType == 'OR.rare' & input.trueORrare != 1", nonnull.mess),
-                         conditionalPanel( condition = "input.outcomeType == 'OR.com' & input.trueORcom != 1", nonnull.mess),
-                         conditionalPanel( condition = "input.outcomeType == 'HR.rare' & input.trueHRrare != 1", nonnull.mess),
-                         conditionalPanel( condition = "input.outcomeType == 'HR.com' & input.trueHRcom != 1", nonnull.mess),
-                         conditionalPanel( condition = "input.outcomeType == 'OLS' & input.trueOLS != 0", nonnull.mess),
-                         conditionalPanel( condition = "input.outcomeType == 'MD' & input.trueMD != 0", nonnull.mess),
-                         conditionalPanel( condition = "input.outcomeType == 'RD' & input.trueRD != 0", nonnull.mess),
-                         
-                         # conservatism message for OLS      
-                         conditionalPanel( condition = "input.outcomeType == 'OLS'", OLS.mess),
-                         
-                         width = 6
-                         
-                     ),  # ends mainPanel
-                     
-                     # panel for contour plot
-                     sidebarPanel(
-                         
-                         checkboxInput( 'makeplot', 'Show plot', FALSE ),
-                         
-                         conditionalPanel( condition = "input.makeplot == true",
-                                           plotlyOutput("curveOfExplainAway", width = "400px", height = "400px") ),
-                         
-                         conditionalPanel( condition = "input.makeplot == true",
-                                           HTML(paste("<br>Each point along the curve defines a joint relationship between the two sensitivity parameters that could potentially explain away the estimated effect.",
-                                                      " If one of the two parameters is smaller than the E-value, the other must be larger, as defined by the plotted curve."))
-                         ),
-                         
-                         width = 6
-                         
-                     ) # end contour plot panel
+# <<<<<<< HEAD
+#                      ),
+#                      
+#                      width=6,
+#                      
+#                      mainPanel(
+#                          selectInput( "outcomeType", label = "Outcome type",
+#                                       choices = c( "Relative risk / rate ratio" = "RR", 
+#                                                    "Odds ratio (outcome prevalence <15%)" = "OR.rare",
+#                                                    "Odds ratio (outcome prevalence >15%)" = "OR.com",
+#                                                    "Hazard ratio (outcome prevalence <15%)" = "HR.rare",
+#                                                    "Hazard ratio (outcome prevalence >15%)" = "HR.com",
+#                                                    "Standardized mean difference (d)" = "MD", 
+#                                                    "Risk difference" = "RD",
+#                                                    "Linear regression coefficient" = "OLS" ) ),
+#                          
+#                          
+#                          # conditional panels that appear depending on selected outcome type
+#                          
+#                          conditionalPanel(
+#                              condition = "input.outcomeType == 'RR' ",
+#                              
+#                              numericInput('est.RR', 'Point estimate', NA, min = 1, max = 9),
+#                              numericInput('lo.RR', 'Confidence interval lower limit', NA, min = 1, max = 9),
+#                              numericInput('hi.RR', 'Confidence interval upper limit', NA, min = 1, max = 9),
+#                              numericInput('trueRR', 'True causal effect to which to shift estimate (default: null)', 1, min = 1, max = 9) 
+#                          ) ,
+#                          
+#                          conditionalPanel(
+#                              
+#                              condition = "input.outcomeType == 'OR.rare' ",
+#                              
+#                              numericInput('est.OR.rare', 'Point estimate', NA, min = 1, max = 9),
+#                              numericInput('lo.OR.rare', 'Confidence interval lower limit', NA, min = 1, max = 9),
+#                              numericInput('hi.OR.rare', 'Confidence interval upper limit', NA, min = 1, max = 9),
+#                              numericInput('trueORrare', 'True causal effect to which to shift estimate (default: null)', 1, min = 1, max = 9)
+#                          ),
+#                          
+#                          conditionalPanel(
+#                              condition = "input.outcomeType == 'OR.com' ",
+#                              
+#                              numericInput('est.OR.com', 'Point estimate', NA, min = 1, max = 9),
+#                              numericInput('lo.OR.com', 'Confidence interval lower limit', NA, min = 1, max = 9),
+#                              numericInput('hi.OR.com', 'Confidence interval upper limit', NA, min = 1, max = 9),
+#                              numericInput('trueORcom', 'True causal effect to which to shift estimate (default: null)', 1, min = 1, max = 9)
+#                          ),
+#                          
+#                          conditionalPanel(
+#                              condition = "input.outcomeType == 'HR.rare' ",
+#                              
+#                              numericInput('est.HR.rare', 'Point estimate', NA, min = 1, max = 9),
+#                              numericInput('lo.HR.rare', 'Confidence interval lower limit', NA, min = 1, max = 9),
+#                              numericInput('hi.HR.rare', 'Confidence interval upper limit', NA, min = 1, max = 9),
+#                              numericInput('trueHRrare', 'True causal effect to which to shift estimate (default: null)', 1, min = 1, max = 9)
+#                          ),
+#                          
+#                          conditionalPanel(
+#                              condition = "input.outcomeType == 'HR.com' ",
+#                              
+#                              numericInput('est.HR.com', 'Point estimate', NA, min = 1, max = 9),
+#                              numericInput('lo.HR.com', 'Confidence interval lower limit', NA, min = 1, max = 9),
+#                              numericInput('hi.HR.com', 'Confidence interval upper limit', NA, min = 1, max = 9),
+#                              numericInput('trueHRcom', 'True causal effect to which to shift estimate (default: null)', 1, min = 1, max = 9)
+#                          ),
+#                          
+#                          conditionalPanel(
+#                              condition = "input.outcomeType == 'OLS' ",
+#                              numericInput('estOLS', 'Regression coefficient estimate', NA, min = 1, max = 9),
+#                              numericInput('seOLS', 'Standard error of coefficient', NA, min = 1, max = 9),
+#                              numericInput('sdOLS', 'Standard deviation of outcome', NA, min = 1, max = 9),
+#                              numericInput('deltaOLS', 'Contrast of interest in exposure', 1, min = 1, max = 9),
+#                              numericInput('trueOLS', 'True causal effect to which to shift estimate (on standard mean difference scale; default: null)', 0, min = 1, max = 9)
+#                          ),
+#                          
+#                          conditionalPanel(
+#                              condition = "input.outcomeType == 'MD' ",
+#                              
+#                              numericInput('est.MD', 'Point estimate', 0, min = 1, max = 9),
+#                              numericInput('se.MD', 'Standard error', NA, min = 1, max = 9),
+#                              numericInput('trueMD', 'True causal effect to which to shift estimate (default: null)', 0, min = 1, max = 9)
+#                          ),
+#                          
+#                          conditionalPanel(
+#                              condition = "input.outcomeType == 'RD' ",
+#                              
+#                              numericInput('n11', 'Number of exposed, diseased individuals', NA, min = 1, max = 9),
+#                              numericInput('n10', 'Number of exposed, non-diseased individuals', NA, min = 1, max = 9),
+#                              numericInput('n01', 'Number of unexposed, diseased individuals', NA, min = 1, max = 9),
+#                              numericInput('n00', 'Number of unexposed, non-diseased individuals', NA, min = 1, max = 9),
+#                              numericInput('alpha', 'Alpha level for confidence interval', 0.05, min = 1, max = 9),
+#                              numericInput('grid', 'Spacing for grid search of E-value', 0.0001, min = 1, max = 9),
+#                              numericInput('trueRD', 'True causal effect to which to shift estimate (default: null)', 0, min = 1, max = 9)
+#                          ),
+#                          
+#                          # display results
+#                          wellPanel(  span( textOutput("result.text") ) ), 
+#                          
+#                          # warnings if computing non-null E-value
+#                          # note: because the condition is in Javascript, have to use period instead of dollar sign to 
+#                          #  access arguments, so CANNOT have period in the variable names (e.g., "true.RR" doesn't work!)
+#                          conditionalPanel( condition = "input.outcomeType == 'RR' & input.trueRR != 1", nonnull.mess),
+#                          conditionalPanel( condition = "input.outcomeType == 'OR.rare' & input.trueORrare != 1", nonnull.mess),
+#                          conditionalPanel( condition = "input.outcomeType == 'OR.com' & input.trueORcom != 1", nonnull.mess),
+#                          conditionalPanel( condition = "input.outcomeType == 'HR.rare' & input.trueHRrare != 1", nonnull.mess),
+#                          conditionalPanel( condition = "input.outcomeType == 'HR.com' & input.trueHRcom != 1", nonnull.mess),
+#                          conditionalPanel( condition = "input.outcomeType == 'OLS' & input.trueOLS != 0", nonnull.mess),
+#                          conditionalPanel( condition = "input.outcomeType == 'MD' & input.trueMD != 0", nonnull.mess),
+#                          conditionalPanel( condition = "input.outcomeType == 'RD' & input.trueRD != 0", nonnull.mess),
+#                          
+#                          # conservatism message for OLS      
+#                          conditionalPanel( condition = "input.outcomeType == 'OLS'", OLS.mess),
+#                          
+#                          width = 6
+#                          
+#                      ),  # ends mainPanel
+#                      
+#                      # panel for contour plot
+#                      sidebarPanel(
+#                          
+#                          checkboxInput( 'makeplot', 'Show plot', FALSE ),
+#                          
+#                          conditionalPanel( condition = "input.makeplot == true",
+#                                            plotlyOutput("curveOfExplainAway", width = "400px", height = "400px") ),
+#                          
+#                          conditionalPanel( condition = "input.makeplot == true",
+#                                            HTML(paste("<br>Each point along the curve defines a joint relationship between the two sensitivity parameters that could potentially explain away the estimated effect.",
+#                                                       " If one of the two parameters is smaller than the E-value, the other must be larger, as defined by the plotted curve."))
+#                          ),
+#                          
+#                          width = 6
+#                          
+#                      ) # end contour plot panel
+# =======
+# >>>>>>> 498b7153f72a1f1c452aa9672eb3e7958144e465
             ),
             
-            tabPanel("Sensitivity analysis for the proportion of meaningfully strong effects",
+            width=6,
+            
+            mainPanel(
+                selectInput( "outcomeType", label = "Outcome type",
+                             choices = c( "Relative risk / rate ratio" = "RR", 
+                                          "Odds ratio (outcome prevalence <15%)" = "OR.rare",
+                                          "Odds ratio (outcome prevalence >15%)" = "OR.com",
+                                          "Hazard ratio (outcome prevalence <15%)" = "HR.rare",
+                                          "Hazard ratio (outcome prevalence >15%)" = "HR.com",
+                                          "Standardized mean difference (d)" = "MD", 
+                                          "Risk difference" = "RD",
+                                          "Linear regression coefficient" = "OLS" ) ),
+                
+                
+                # conditional panels that appear depending on selected outcome type
+                
+                conditionalPanel(
+                    condition = "input.outcomeType == 'RR' ",
+                    
+                    numericInput('est.RR', 'Point estimate', NA, min = 1, max = 9),
+                    numericInput('lo.RR', 'Confidence interval lower limit', NA, min = 1, max = 9),
+                    numericInput('hi.RR', 'Confidence interval upper limit', NA, min = 1, max = 9),
+                    numericInput('trueRR', 'True causal effect to which to shift estimate (default: null)', 1, min = 1, max = 9) 
+                ) ,
+                
+                conditionalPanel(
+                    
+                    condition = "input.outcomeType == 'OR.rare' ",
+                    
+                    numericInput('est.OR.rare', 'Point estimate', NA, min = 1, max = 9),
+                    numericInput('lo.OR.rare', 'Confidence interval lower limit', NA, min = 1, max = 9),
+                    numericInput('hi.OR.rare', 'Confidence interval upper limit', NA, min = 1, max = 9),
+                    numericInput('trueORrare', 'True causal effect to which to shift estimate (default: null)', 1, min = 1, max = 9)
+                ),
+                
+                conditionalPanel(
+                    condition = "input.outcomeType == 'OR.com' ",
+                    
+                    numericInput('est.OR.com', 'Point estimate', NA, min = 1, max = 9),
+                    numericInput('lo.OR.com', 'Confidence interval lower limit', NA, min = 1, max = 9),
+                    numericInput('hi.OR.com', 'Confidence interval upper limit', NA, min = 1, max = 9),
+                    numericInput('trueORcom', 'True causal effect to which to shift estimate (default: null)', 1, min = 1, max = 9)
+                ),
+                
+                conditionalPanel(
+                    condition = "input.outcomeType == 'HR.rare' ",
+                    
+                    numericInput('est.HR.rare', 'Point estimate', NA, min = 1, max = 9),
+                    numericInput('lo.HR.rare', 'Confidence interval lower limit', NA, min = 1, max = 9),
+                    numericInput('hi.HR.rare', 'Confidence interval upper limit', NA, min = 1, max = 9),
+                    numericInput('trueHRrare', 'True causal effect to which to shift estimate (default: null)', 1, min = 1, max = 9)
+                ),
+                
+                conditionalPanel(
+                    condition = "input.outcomeType == 'HR.com' ",
+                    
+                    numericInput('est.HR.com', 'Point estimate', NA, min = 1, max = 9),
+                    numericInput('lo.HR.com', 'Confidence interval lower limit', NA, min = 1, max = 9),
+                    numericInput('hi.HR.com', 'Confidence interval upper limit', NA, min = 1, max = 9),
+                    numericInput('trueHRcom', 'True causal effect to which to shift estimate (default: null)', 1, min = 1, max = 9)
+                ),
+                
+                conditionalPanel(
+                    condition = "input.outcomeType == 'OLS' ",
+                    numericInput('estOLS', 'Regression coefficient estimate', NA, min = 1, max = 9),
+                    numericInput('seOLS', 'Standard error of coefficient', NA, min = 1, max = 9),
+                    numericInput('sdOLS', 'Standard deviation of outcome', NA, min = 1, max = 9),
+                    numericInput('deltaOLS', 'Contrast of interest in exposure', 1, min = 1, max = 9),
+                    numericInput('trueOLS', 'True causal effect to which to shift estimate (on standard mean difference scale; default: null)', 0, min = 1, max = 9)
+                ),
+                
+                conditionalPanel(
+                    condition = "input.outcomeType == 'MD' ",
+                    
+                    numericInput('est.MD', 'Point estimate', 0, min = 1, max = 9),
+                    numericInput('se.MD', 'Standard error', NA, min = 1, max = 9),
+                    numericInput('trueMD', 'True causal effect to which to shift estimate (default: null)', 0, min = 1, max = 9)
+                ),
+                
+                conditionalPanel(
+                    condition = "input.outcomeType == 'RD' ",
+                    
+                    numericInput('n11', 'Number of exposed, diseased individuals', NA, min = 1, max = 9),
+                    numericInput('n10', 'Number of exposed, non-diseased individuals', NA, min = 1, max = 9),
+                    numericInput('n01', 'Number of unexposed, diseased individuals', NA, min = 1, max = 9),
+                    numericInput('n00', 'Number of unexposed, non-diseased individuals', NA, min = 1, max = 9),
+                    numericInput('alpha', 'Alpha level for confidence interval', 0.05, min = 1, max = 9),
+                    numericInput('grid', 'Spacing for grid search of E-value', 0.0001, min = 1, max = 9),
+                    numericInput('trueRD', 'True causal effect to which to shift estimate (default: null)', 0, min = 1, max = 9)
+                ),
+                
+                # display results
+                wellPanel(  span( textOutput("result.text") ) ), 
+                
+                # warnings if computing non-null E-value
+                # note: because the condition is in Javascript, have to use period instead of dollar sign to 
+                #  access arguments, so CANNOT have period in the variable names (e.g., "true.RR" doesn't work!)
+                conditionalPanel( condition = "input.outcomeType == 'RR' & input.trueRR != 1", nonnull.mess),
+                conditionalPanel( condition = "input.outcomeType == 'OR.rare' & input.trueORrare != 1", nonnull.mess),
+                conditionalPanel( condition = "input.outcomeType == 'OR.com' & input.trueORcom != 1", nonnull.mess),
+                conditionalPanel( condition = "input.outcomeType == 'HR.rare' & input.trueHRrare != 1", nonnull.mess),
+                conditionalPanel( condition = "input.outcomeType == 'HR.com' & input.trueHRcom != 1", nonnull.mess),
+                conditionalPanel( condition = "input.outcomeType == 'OLS' & input.trueOLS != 0", nonnull.mess),
+                conditionalPanel( condition = "input.outcomeType == 'MD' & input.trueMD != 0", nonnull.mess),
+                conditionalPanel( condition = "input.outcomeType == 'RD' & input.trueRD != 0", nonnull.mess),
+                
+                # conservatism message for OLS      
+                conditionalPanel( condition = "input.outcomeType == 'OLS'", OLS.mess),
+                
+                width = 6
+                
+            ),  # ends mainPanel
+            
+            # panel for contour plot
+            sidebarPanel(
+                
+                checkboxInput( 'makeplot', 'Show plot', FALSE ),
+                
+                conditionalPanel( condition = "input.makeplot == true",
+                                  plotlyOutput("curveOfExplainAway", width = "400px", height = "400px") ),
+                
+                conditionalPanel( condition = "input.makeplot == true",
+                                  HTML(paste("<br>Each point along the curve defines a joint relationship between the two sensitivity parameters that could potentially explain away the estimated effect.",
+                                             " If one of the two parameters is smaller than the E-value, the other must be larger, as defined by the plotted curve."))
+                ),
+                
+                width = 6
+                
+            ) # end contour plot panel
+            ),
+            
+            tabPanel("Sensitivity analysis for the percentage of meaningfully strong effects",
                      shinyjs::useShinyjs(),
                      wellPanel(  HTML(paste(
                          'This website implements the sensitivity analyses described in <a href="https://www.tandfonline.com/doi/full/10.1080/01621459.2018.1529598">Mathur & VanderWeele (2020a)</a> and <a href="https://annals.org/aim/fullarticle/2643434/sensitivity-analysis-observational-research-introducing-e-value">VanderWeele & Ding (2017)</a>.
@@ -218,8 +353,7 @@ navbarPage( "Sensitivity analysis for unmeasured confounding in meta-analyses", 
                        <br><br><b>When these methods should be used</b>
                        
                        <br><br>These methods perform well only in meta-analyses with at least 10 studies; we do not recommend reporting them in smaller meta-analyses. Additionally, it only makes sense to consider proportions of effects stronger than a threshold when the heterogeneity estimate is greater than 0. For meta-analyses with fewer than 10 studies or with a heterogeneity estimate of 0, you can simply report E-values for the point estimate using the tab "Sensitivity analysis for the point estimate".'
-                         
-                         
+                       
                      ) )
                      ),
                      width = 6,
@@ -265,11 +399,13 @@ navbarPage( "Sensitivity analysis for unmeasured confounding in meta-analyses", 
                                                                          shiny_iconlink() %>%
                                                                              bs_embed_popover(title = 'The scale (relative risk [RR] or log-relative risk [log-RR] on which you will input the meta-analytic pooled estimate, threshold, and mean bias factor')
                                                                      ),
+
                                                                  numericInput('calibrated_muB', 'Bias factor in each study (on scale you specified)', NA, min = 0, max = Inf, step = 0.01) %>%
                                                                      shinyInput_label_embed(
                                                                          shiny_iconlink() %>%
                                                                              bs_embed_popover(title = 'Used to adjust proportion by the provided bias factor')),
                                                                  numericInput('calibrated_q', 'Threshold (q) for meaningfully strong effect size \n(on scale you specified)', NA, min = 0, max = Inf, step = 0.01) %>%
+
                                                                      shinyInput_label_embed(
                                                                          shiny_iconlink() %>%
                                                                              bs_embed_popover(title = 'Effect size that represents the minimum threshold for a meaningfully strong effect size'))
@@ -277,7 +413,9 @@ navbarPage( "Sensitivity analysis for unmeasured confounding in meta-analyses", 
                                                           
                                                           
                                                           column(width=6,
+
                                                                  numericInput('calibrated_r', 'Proportion below which strong effects are to be reduced (r)', NA, min = 0, max = 1, step = 0.1) %>%
+
                                                                      shinyInput_label_embed(
                                                                          shiny_iconlink() %>%
                                                                              bs_embed_popover(title = 'For the second two metrics, the value to which the proportion of meaningfully strong effects is to be reduced. We suggest 0.10 or 0.20, for example.')),
@@ -295,6 +433,7 @@ navbarPage( "Sensitivity analysis for unmeasured confounding in meta-analyses", 
                                   ),  ##closes fluidRow
                                   
                                   ### results text ###
+
                                   wellPanel( textOutput("calibrated_results_prop"), span( textOutput("calibrated_text1") )
                                              # for "i" information icon, not currently in use
                                              #, shiny_iconlink() %>% bs_embed_popover(title = "PLACEHOLDER INFORMATION ICON")
@@ -307,6 +446,7 @@ navbarPage( "Sensitivity analysis for unmeasured confounding in meta-analyses", 
                                              # for "i" information icon, not currently in use
                                              #, shiny_iconlink() %>% bs_embed_popover(title = "PLACEHOLDER INFORMATION ICON")
                                   ),
+
                                   mainPanel(
                                       span( htmlOutput("calibrated_cm_messages"), style="color:red"), width = 8
                                   ),
@@ -342,6 +482,7 @@ navbarPage( "Sensitivity analysis for unmeasured confounding in meta-analyses", 
                                                     .box {margin: 0px;}
                                                     
                                                     ')),
+
                                       fluidRow(
                                           tags$style(type = "text/css",
                                                      "label { font-size: 12px; }"
@@ -350,13 +491,16 @@ navbarPage( "Sensitivity analysis for unmeasured confounding in meta-analyses", 
                                           column(width=12, shinyjs::hidden(selectInput('parametric_method', 'Method (calibrated or parametric)', choices = c('parametric'), selected = 'parametric'))
                                           ),
                                           shinydashboard::box(width=4,
+
                                                               title= h4(strong("Input estimates from confounded meta-analysis")),
+
                                                               column(width=10,
                                                                      selectInput('parametric_scale', 'Scale (RR or log-RR)', choices = c('RR', 'Log-RR'), selected = 'RR') %>%
                                                                          shinyInput_label_embed(
                                                                              shiny_iconlink() %>%
                                                                                  bs_embed_popover(title = 'The scale (relative risk [RR] or log-relative risk [log-RR] on which you will input the meta-analytic pooled estimate, threshold, and mean bias factor below.'))
                                                                      ,
+
                                                                      numericInput('parametric_yr', 'Pooled effect size', NA, min = 0, max = Inf, step = 0.1) %>%
                                                                          shinyInput_label_embed(
                                                                              shiny_iconlink() %>%
@@ -370,6 +514,7 @@ navbarPage( "Sensitivity analysis for unmeasured confounding in meta-analyses", 
                                                                              shiny_iconlink() %>%
                                                                                  bs_embed_popover(title = paste0('The estimated heterogeneity (', '\u03c4\u00b2', ') from the confounded meta-analysis. Since the meta-analysis should be conducted with the point estimates on the log scale, you should input ', '\u03c4\u00b2', ' as it is reported by your meta-analysis software without taking the log again.'))),
                                                                      numericInput('parametric_vt2', paste0('Estimated variance of ', '\u03c4\u00b2', '  (optional)'), NA, min = 0, max = Inf, step = 0.01) %>%
+
                                                                          shinyInput_label_embed(
                                                                              shiny_iconlink() %>%
                                                                                  bs_embed_popover(title = paste0('The estimated variance of (', '\u03c4\u00b2', ') from the confounded meta-analysis. Since the meta-analysis should be conducted with the point estimates on the log scale, you should input ', '\u03c4\u00b2', ' as it is reported by your meta-analysis software without taking the log again.')))
@@ -378,6 +523,7 @@ navbarPage( "Sensitivity analysis for unmeasured confounding in meta-analyses", 
                                           shinydashboard::box(width=6,
                                                               title= h4(strong("Specify sensitivity parameters and thresholds")),
                                                               column(width=6,
+
                                                                      numericInput('parametric_muB', 'Mean bias factor across studies (on scale you specified)', NA, min = 0, max = Inf, step = 0.01) %>%
                                                                          shinyInput_label_embed(
                                                                              shiny_iconlink() %>%
@@ -387,29 +533,35 @@ navbarPage( "Sensitivity analysis for unmeasured confounding in meta-analyses", 
                                                                              shiny_iconlink() %>%
                                                                                  bs_embed_popover(title = paste0('The proportion of the confounded heterogeneity estimate', '\u03c4\u00b2', ' that is thought to be due to variation across studies in confounding bias rather than to genuine effect heterogeneity. This proportion allows to you to specify how variable you think confounding bias is across studies.'))),
                                                                      numericInput('parametric_r', 'Proportion below which strong effects are to be reduced (r)', NA, min = 0, max = 1, step = 0.1) %>%
+
                                                                          shinyInput_label_embed(
                                                                              shiny_iconlink() %>%
                                                                                  bs_embed_popover(title = 'For the second two metrics, the value to which the proportion of meaningfully strong effects is to be reduced'))
                                                               ),
                                                               
                                                               column(width=6,       
+
                                                                      numericInput('parametric_q', 'Threshold (q) for meaningfully strong effect size (on scale you specified)', NA, min = 0, max = Inf, step = 0.01) %>%
                                                                          shinyInput_label_embed(
                                                                              shiny_iconlink() %>%
                                                                                  bs_embed_popover(title = 'Effect size that represents the minimum threshold for a meaningfully strong effect
                                                                                     size (on scale you specified)')),
+
                                                                      selectInput('parametric_tail', 'Tail', choices = c('above', 'below'), selectize = FALSE, size = 2, selected = 'above') %>%
                                                                          shinyInput_label_embed(
                                                                              shiny_iconlink() %>%
                                                                                  bs_embed_popover(title = 'above for the proportion of effects above q; below for the proportion of effects below q')),
                                                                      actionButton(inputId = 'parametric_calculate', label='Analyze')
+
                                                               )
+
                                           )
                                           
                                           
                                       )), ## closes fluidRow and dashboardBody
                                   
                                   ### results text ###
+
                                   wellPanel( textOutput("parametric_results_prop"), span( textOutput("parametric_text1") ),
                                              # for "i" information icon, not currently in use
                                              #, shiny_iconlink() %>% bs_embed_popover(title = "PLACEHOLDER INFORMATION ICON")
@@ -443,13 +595,16 @@ navbarPage( "Sensitivity analysis for unmeasured confounding in meta-analyses", 
                                   mainPanel(
                                       plotOutput('parametric_plot1')
                                   ),
+
                                   ### plot warnings:
                                   ## jl: all warnings from sens_plot should be output with the below now:
                                   mainPanel(
                                       span( htmlOutput("parametric_sens_plot_messages"), style="color:red"), width = 8
                                   )
+
                          ) ### closes tabPanel "Parametric"
                      ) ### closes tabsetPanel
+
             ), ### closes tabPanel "Fixed sensitivity parameters"
             
             tabPanel("More resources",
@@ -460,16 +615,19 @@ navbarPage( "Sensitivity analysis for unmeasured confounding in meta-analyses", 
                          "<b>More resources for these sensitivity analyses</b>",
                          
                          "<br><br>In addition to using this website, you can alternatively conduct these sensitivity analyses
+
                        using the functions <code>confounded_meta</code> and <code>sens_plot</code> in the R package <a href='https://cran.r-project.org/web/packages/EValue/index.html'>EValue</a> (<a href='https://www.ncbi.nlm.nih.gov/pmc/articles/PMC6066405/'>Mathur et al., 2018</a>).",
                          
                          "<br><br>For more information on the interpretation of these sensitivity analyses and guidance on choosing the sensitivity parameters, see <a href='https://www.tandfonline.com/doi/full/10.1080/01621459.2018.1529598'>Mathur & VanderWeele (2020a)</a>,
                        and for a review of methods to choose a threshold representing a meaningfully strong effect size, see the Supplement of <a href='https://onlinelibrary.wiley.com/doi/full/10.1002/sim.8057'>Mathur & VanderWeele (2019).</a>
                        For more on the robust estimation methods, see <a href='https://journals.lww.com/epidem/Fulltext/2020/05000/Robust_Metrics_and_Sensitivity_Analyses_for.7.aspx?casa_token=PELPmhG6P3wAAAAA:D2bYC3kXCtRmncY-ELNt4I8ub1ZUhwTQjsFq8vh05h_EhV4kOJQuR3L97TsSLtun4zQ26Ys26ayF3aleMKj-93Q'>Mathur & VanderWeele (2020b).</a></a>",
+
                          
                          
                          "<br><br><b>More resources for other biases and study designs</b>",
                          
                          "<br><br>Similar methods and tools are also available to conduct analogous sensitivity analyses for other types of biases as follows. </br></br>
+
                        
                        To assess other biases in meta-analyses:   
                        
@@ -497,7 +655,7 @@ navbarPage( "Sensitivity analysis for unmeasured confounding in meta-analyses", 
                        
                        </br></br>
                        ",
-                         
+
                          "<b>Developers</b>",
                          
                          
@@ -509,6 +667,7 @@ navbarPage( "Sensitivity analysis for unmeasured confounding in meta-analyses", 
                          
                          
                          "<ul>
+
                        <li><a href='https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4820664/'>Ding P & VanderWeele TJ (2016)</a>. Sensitivity analysis without assumptions. <i>Epidemiology</i>, 27(3), 368–377.</li>
                        
                        <li><a href='https://jamanetwork.com/journals/jama/fullarticle/2723079?casa_token=vP0UXdEX4HAAAAAA:y0GoUYecb4QvGnn23FNxpnOsBu5Z70-DW1apD84XqPWNL0kXYDXlT5hQVweAUZVh6zJe9BU_sA'>Haneuse S, VanderWeele TJ, & Arterburn D (2019)</a>. Using the E-value to assess the potential effect of unmeasured confounding in observational studies. <i>Journal of the American Medical Association</i>, 321(6), 602-603.</li>
@@ -536,11 +695,12 @@ navbarPage( "Sensitivity analysis for unmeasured confounding in meta-analyses", 
                        
                        <li><a href='https://academic.oup.com/aje/article/188/10/1823/5506602?casa_token=5ZyiVJp9_5UAAAAA:40rpOH1mRz0IDeRJ35atRRk9x6MJgIHMNOxLCcsnfouzN3qWXrght0XVWNIHQcRwWP1Bhgl8vY9B'>VanderWeele TJ & Li Y (2019)</a>. Simple sensitivity analysis for differential measurement error. <i>American Journal of Epidemiology</i>, 188(10), 1823-1829.</li>
                        </ul>"
+
                          
                          
                      ) ) )
             )
             
-) ## closes navbarPage
+                     ) ## closes navbarPage
 
 
