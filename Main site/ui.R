@@ -194,6 +194,8 @@ navbarPage( "Sensitivity analysis for unmeasured confounding in meta-analyses", 
             
             width=6,
 
+hr(),
+
 #bm: add spacer here
             
             mainPanel(
@@ -371,7 +373,11 @@ navbarPage( "Sensitivity analysis for unmeasured confounding in meta-analyses", 
                        
                      ) )
                      ),
+                     
                      width = 6,
+                     
+                     hr(),
+                     
                      tabsetPanel(
                          tabPanel("Robust estimation (homogeneous bias across studies)",
                                   fluidRow(
@@ -447,6 +453,8 @@ navbarPage( "Sensitivity analysis for unmeasured confounding in meta-analyses", 
                                       )
                                   ),  ##closes fluidRow
                                   
+                                  hr(),
+                                  
                                   ### results text ###
 
                                   wellPanel( textOutput("calibrated_results_prop"), span( textOutput("calibrated_text1") )
@@ -465,6 +473,8 @@ navbarPage( "Sensitivity analysis for unmeasured confounding in meta-analyses", 
                                   mainPanel(
                                       span( htmlOutput("calibrated_cm_messages"), style="color:red"), width = 8
                                   ),
+                                  
+                                  hr(),
                                   
                                   ### used for plot only:
                                   shinydashboard::box(width=6,
@@ -575,6 +585,8 @@ navbarPage( "Sensitivity analysis for unmeasured confounding in meta-analyses", 
                                           
                                       )), ## closes fluidRow and dashboardBody
                                   
+                                  hr(),
+                                  
                                   ### results text ###
 
                                   wellPanel( textOutput("parametric_results_prop"), span( textOutput("parametric_text1") ),
@@ -592,6 +604,8 @@ navbarPage( "Sensitivity analysis for unmeasured confounding in meta-analyses", 
                                   mainPanel(
                                       span( htmlOutput("parametric_cm_messages"), style="color:red"), width = 8
                                   ),
+                                  
+                                  hr(),
                                   
                                   shinydashboard::box(width=6,
                                                       title=h4(strong("Range of bias factors to show on plot")),

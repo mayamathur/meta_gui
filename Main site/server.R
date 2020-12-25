@@ -296,7 +296,8 @@ function(input, output, session) {
             
             
             ##### Create String for UI #####
-            string_Gmin = ifelse(p < r, "Not applicable. This is already the case, even with no bias, given your pooled effect size, threshold, and choice of tail.", paste( Gmin, " (95% CI: ", Gmin_lo, ", ", Gmin_hi, ")", sep="" ))
+            #bm
+            string_Gmin = ifelse(p < r, "The proportion of meaningfully strong effects is already less than or equal to r even with no confounding, so this metric does not apply. No confounding at all is required to make the specified shift.", paste( Gmin, " (95% CI: ", Gmin_lo, ", ", Gmin_hi, ")", sep="" ))
             string_Gmin = ifelse(is.na(string_Gmin), "Cannot compute Tmin or Gmin without r. Returning only prop.", string_Gmin)
             return( string_Gmin )
             
@@ -305,7 +306,7 @@ function(input, output, session) {
     
     calibrated_plot <- observeEvent(input$calibrated_plot, {
         output$calibrated_plot1 = renderPlot({
-            withProgress(message="generating plot...", value=1,{
+            withProgress(message="Generating plot...", value=1,{
                 ### isolate on parameters to not update until action button pressed again
                 scale = isolate(input$calibrated_scale)
                 r = isolate(input$calibrated_r)
@@ -442,7 +443,7 @@ function(input, output, session) {
             
             
             ##### Create String for UI #####
-            string_Tmin = ifelse(p < r_2, "Not applicable. This is already the case, even with no bias, given your pooled effect size, threshold, and choice of tail.", paste( Tmin, " (95% CI: ", Tmin_lo, ", ", Tmin_hi, ")", sep="" ))
+            string_Tmin = ifelse(p < r_2, "The proportion of meaningfully strong effects is already less than or equal to r even with no confounding, so this metric does not apply. No confounding at all is required to make the specified shift.", paste( Tmin, " (95% CI: ", Tmin_lo, ", ", Tmin_hi, ")", sep="" ))
             # string_Tmin = paste( Tmin, " (95% CI: ", Tmin_lo, ", ", Tmin_hi, ")", sep="" )
             return( string_Tmin )
             
@@ -458,7 +459,7 @@ function(input, output, session) {
             
             
             ##### Create String for UI #####
-            string_Gmin = ifelse(p < r_2, "Not applicable. This is already the case, even with no bias, given your pooled effect size, threshold, and choice of tail.", paste( Gmin, " (95% CI: ", Gmin_lo, ", ", Gmin_hi, ")", sep="" ))
+            string_Gmin = ifelse(p < r_2, "The proportion of meaningfully strong effects is already less than or equal to r even with no confounding, so this metric does not apply. No confounding at all is required to make the specified shift.", paste( Gmin, " (95% CI: ", Gmin_lo, ", ", Gmin_hi, ")", sep="" ))
             return( string_Gmin )
             
         }) ## closes parametric_text3

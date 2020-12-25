@@ -253,7 +253,6 @@ confounded_meta = function( method="calibrated",  # for both methods
 ) {
     
     
-    #browser()
     # # test only
     # method="calibrated"
     # q=median(d$calib)
@@ -594,7 +593,8 @@ confounded_meta = function( method="calibrated",  # for both methods
         if ( !is.na(Tmin) & Tmin == 1 ) {
             if (simplifyWarnings == FALSE) message("Prop is already less than or equal to r even with no confounding, so Tmin and Gmin are simply equal to 1. No confounding at all is required to make the specified shift.")
             
-            if (simplifyWarnings == TRUE) message("The proportion is already less than or equal to r even with no confounding, so the amount of bias and of confounding strength required to make the specified shift are simply equal to 1. No confounding at all is required to make the specified shift.")
+            # no warning for website because it produces its own
+            #if (simplifyWarnings == TRUE) message("The proportion is already less than or equal to r even with no confounding, so the amount of bias and of confounding strength required to make the specified shift are simply equal to 1. No confounding at all is required to make the specified shift.")
         }
         
         if ( !is.na(Tmin) & muB.toward.null == TRUE ) {
@@ -958,7 +958,7 @@ sens_plot = function(method="calibrated",
             } else {
                 graphics::plot( p + ggplot2::geom_ribbon( aes(ymin=lo, ymax=hi), alpha=0.15 ) )
                 
-                warning("Calculating parametric confidence intervals in the plot. For values of Phat that are less than 0.15 or greater than 0.85, these confidence intervals may not perform well.")
+                warning("Calculating parametric confidence intervals in the plot. For values of the proportion that are less than 0.15 or greater than 0.85, these confidence intervals may not perform well.")
             }
             
             
@@ -1260,7 +1260,7 @@ Phat_CI_lims = function(.B,
 
 
 
-#' CI for Tmin and Gmini
+#' CI for Tmin and Gmin
 #'
 #' An internal function that estimates a CI for Tmin and Gmin. Users should call \code{confounded_meta} instead.
 #' @import

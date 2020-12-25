@@ -9,17 +9,15 @@ editor_options:
   
   
 ```{r warning=FALSE, message=FALSE, results=FALSE}
-# install.packages("testthat")
-# install.packages("devtools")
-# install.packages("dplyr")
-# install.packages("ICC")
-# install.packages("MetaUtility")
-# install.packages("ggplot2")
 library(testthat)
 
 
-library(EValue)
-# detach("package:EValue", unload = TRUE)
+#library(EValue)
+
+detach("package:EValue", unload = TRUE)
+setwd("~/Dropbox/Personal computer/Independent studies/R packages/EValue package (git)/evalue_package/EValue/R")
+source("meta-analysis.R")
+
 
 library(devtools)
 library(dplyr)
@@ -34,7 +32,7 @@ library(here)
 ```{r}
 # make file paths relative so they run on other machines
 setwd(here())
-source("tests_human_inspection/helper_testthat.R")
+source("helper_testthat.R")
 
 # setwd("~/Box Sync/jlee/Maya/metasens_website/Main site/tests_human_inspection")
 # source("helper_testthat.R")
@@ -45,19 +43,12 @@ source("tests_human_inspection/helper_testthat.R")
 # setwd("~/Box Sync/jlee/Maya/evalue/tests_human_inspection/")
 ```
 
-#### test1 gbc_prepped.csv file - for JL to fix
+#### test1 gbc_prepped.csv file - correct
 ```{r  error=TRUE}
-
-# @@MM: I fixed the confusing error from confounded_meta (see improved output below).
-#  But now the website is throwing a different error about "arguments imply differing number of rows: 1, 0"
-# Please fix that so it throws confounded_meta's error
-# Then please update the plot as well
-
-## jl something weird going on here -- seems like sometimes it gives the MM error below and sometimes gives the "arguments imply differing number of rows: 1, 0" when just re-running the same code:
 
 d = read.csv("tests_human_inspection/Datasets for website test/gbc_prepped.csv", stringsAsFactors = FALSE)
 
-# note: log(0.9) = -0.04575749056
+# note: log(0.9) = -0.1053605
 confounded_meta(method="calibrated",
                 q = log(.9),
                 r = 0.1,
@@ -68,9 +59,12 @@ confounded_meta(method="calibrated",
                 dat = d,
                 R = 500)
 ### R output:
-# The confidence interval and/or standard error for the proportion were not estimable via bias-corrected and accelerated bootstrapping. You can try increasing R.
-# The confidence interval and/or standard error for Tmin and Gmin were not estimable via bias-corrected and accelerated bootstrapping. You can try increasing R.
+# [1] "All values of t are equal to  1 \n Cannot calculate confidence intervals"
 # Prop is already less than or equal to r even with no confounding, so Tmin and Gmin are simply equal to 1. No confounding at all is required to make the specified shift.
+#   Value        Est         SE CI.lo      CI.hi
+# 1  Prop 0.02358491 0.01667209     0 0.08962264
+# 2  Tmin 1.00000000 0.00000000     1         NA
+# 3  Gmin 1.00000000 0.00000000     1         NA
 
 ### Website output: 
 knitr::include_graphics("test_1a.png")
@@ -87,27 +81,6 @@ sens_plot(method="calibrated",
           dat = d,
           R = 500)
 
-### R output:
-# Some of the pointwise confidence intervals were not estimable via bias-corrected and accelerated bootstrapping, so the confidence band on the plot may not be shown for some values of the bias factor. This usually happens at values with a proportion estimate close to 0 or 1. Otherwise, you can try increasing R.
-# Warning messages:
-# 1: Problem with `mutate()` input `..1`.
-# ℹ extreme order statistics used as endpoints
-# ℹ Input `..1` is `...[]`.
-# ℹ The error occurred in row 28. 
-# 2: In norm.inter(t, adj.alpha) :
-#   extreme order statistics used as endpoints
-# 3: Problem with `mutate()` input `..1`.
-# ℹ extreme order statistics used as endpoints
-# ℹ Input `..1` is `...[]`.
-# ℹ The error occurred in row 35. 
-# 4: In norm.inter(t, adj.alpha) :
-#   extreme order statistics used as endpoints
-# 5: Problem with `mutate()` input `..1`.
-# ℹ extreme order statistics used as endpoints
-# ℹ Input `..1` is `...[]`.
-# ℹ The error occurred in row 36. 
-# 6: In norm.inter(t, adj.alpha) :
-#   extreme order statistics used as endpoints
 
 ### Website output: 
 
@@ -118,6 +91,7 @@ knitr::include_graphics("test_1b.png")
 ```{r  error=TRUE}
 d = read.csv("tests_human_inspection/Datasets for website test/gbc_prepped.csv")
 
+# note: log(0.5) = -0.6931472
 confounded_meta(method="calibrated",
                 q = log(0.5),
                 r = 0.5,
@@ -141,7 +115,7 @@ knitr::include_graphics("test_2a_log.png")
 ### Website output (passing on RR scale): 
 knitr::include_graphics("test_2a_rr.png")
 
-# MM: JL, update this:
+
 sens_plot(method="calibrated",
           type = "line",
           q = log(.5),
@@ -334,7 +308,7 @@ sens_plot(method="calibrated",
 knitr::include_graphics("test_7_plot.png")
 ```
 
-#### test8 - for JL to fix; fixed
+#### test8 - correct
 ```{r error=TRUE}
 ## parametric method test
 confounded_meta(method="parametric",
@@ -356,11 +330,7 @@ confounded_meta(method="parametric",
 ### Website output: 
 # passing input on RR scale
 knitr::include_graphics("test_8_rr.png")
-# passing input on log-RR scale
-# @@MM: JL, fix this please:
-# "non-numeric argument to mathematical function"
-# this happens with the plot when passing on log scale
-# @@JL: fixed, there was a typo in the variable call
+
 knitr::include_graphics("test_8_log.png")
 
 
@@ -386,10 +356,6 @@ sens_plot(method = "parametric",
 knitr::include_graphics("test_8_plot_rr.png")
 # passing input on log-RR scale
 
-# @@JL, fix this please:
-# "non-numeric input"
-# does not match confounded_meta
-# @@JL: fixed, there was a typo in the variable call
 knitr::include_graphics("test_8_plot_log.png")
 ```
 
@@ -416,12 +382,11 @@ knitr::include_graphics("test_9.png")
 ```
 
 
-#### test10 - for JL to fix
+#### test10 - correct
 ```{r error=TRUE}
-# @@MM: This one previously had Tmin<1. This wasn't wrong because it represents bias in the 
-#  other direction, but for clarity I changed the package output to by definition set Tmin=Gmin=1
-#  in these cases. Now these are not being displayed on the app at all, maybe becuase their CIs are [NA, NA]. 
-# @@JL: we currently have in the app that if p < r it outputs the  "Not applicable. This is already the case, even with no bias, given your pooled effect size, threshold, and choice of tail." message...is this incorrect?
+# note:
+# log(0.5) = -0.6931472
+# log(1.5) = 0.4054651
 confounded_meta(method="parametric",
                 q=log(.5),
                 r=0.75,
@@ -468,7 +433,7 @@ knitr::include_graphics("test_10b.png")
 ```
 
 
-#### test11 - for JL to fix; fixed
+#### test11 - correct
 ```{r error=TRUE}
 ## on log-RR scale
 # log(1.2)
@@ -492,8 +457,6 @@ confounded_meta(method="parametric",
 ### Website output: 
 knitr::include_graphics("test_11a.png")
 
-#@@MM: This also has the "non-numeric argument to mathematical function" error
-#@@JL: fixed
 sens_plot(method = "parametric",
           type="line",
           q=0.1823216,
