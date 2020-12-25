@@ -281,7 +281,7 @@ function(input, output, session) {
             
             ##### Create String for UI #####
             string_Tmin = ifelse(p < r, "The proportion of meaningfully strong effects is already less than or equal to r even with no confounding, so this metric does not apply. No confounding at all is required to make the specified shift.", paste( Tmin, " (95% CI: ", Tmin_lo, ", ", Tmin_hi, ")", sep="" ))
-            string_Tmin = ifelse(is.na(string_Tmin), "Cannot compute Tmin or Gmin without r. Returning only prop.", string_Tmin)
+            string_Tmin = ifelse(is.na(string_Tmin), "Cannot compute second two metrics without r. Returning only the proportion.", string_Tmin)
             return( string_Tmin )
             
         }) ## closes calibrated_text2
@@ -298,7 +298,7 @@ function(input, output, session) {
             ##### Create String for UI #####
             #bm
             string_Gmin = ifelse(p < r, "The proportion of meaningfully strong effects is already less than or equal to r even with no confounding, so this metric does not apply. No confounding at all is required to make the specified shift.", paste( Gmin, " (95% CI: ", Gmin_lo, ", ", Gmin_hi, ")", sep="" ))
-            string_Gmin = ifelse(is.na(string_Gmin), "Cannot compute Tmin or Gmin without r. Returning only prop.", string_Gmin)
+            string_Gmin = ifelse(is.na(string_Gmin), "Cannot compute the second two metrics without r. Returning only the proportion.", string_Gmin)
             return( string_Gmin )
             
         }) ## closes calibrated_text3
@@ -526,8 +526,6 @@ function(input, output, session) {
             }
             )
             
-            ### output plot warnings:
-            ## jl: warnings/messages should now be built into the plot outputs using withCallingHandlers to pull messages/warnings from sens_plot itself
             
         }) ## closes parametric_plot1
     }) ## closes parametric_plot

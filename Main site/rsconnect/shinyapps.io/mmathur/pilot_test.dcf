@@ -5,6 +5,9 @@ account: mmathur
 server: shinyapps.io
 hostUrl: https://api.shinyapps.io/v1
 appId: 3316676
-bundleId: 3916946
+bundleId: 4028363
 url: https://mmathur.shinyapps.io/pilot_test/
-when: 1606596360.98876
+when: 1608910196.85835
+asMultiple: FALSE
+asStatic: FALSE
+ignoredFiles: helper_testthat.R|tests_human_inspection

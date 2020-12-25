@@ -418,7 +418,7 @@ hr(),
                                                                  selectInput('calibrated_scale', 'Scale (RR or log-RR)', choices = c('RR', 'Log-RR'), selected = 'RR') %>%
                                                                      shinyInput_label_embed(
                                                                          shiny_iconlink() %>%
-                                                                             bs_embed_popover(title = 'The scale (relative risk [RR] or log-relative risk [log-RR] on which you will input the meta-analytic pooled estimate, threshold, and mean bias factor')
+                                                                             bs_embed_popover(title = 'The scale (relative risk [RR] or log-relative risk [log-RR] on which you will input the meta-analytic pooled estimate, threshold, and bias factor')
                                                                      ),
 
                                                                  numericInput('calibrated_muB', 'Bias factor in each study (on scale you specified)', NA, min = 0, max = Inf, step = 0.01) %>%
