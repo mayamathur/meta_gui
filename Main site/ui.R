@@ -411,6 +411,8 @@ hr(),
                                                           column(width=10,
                                                                  actionButton(inputId = 'calibrated_calculate', label='Analyze')
                                                           )
+                                                          
+                                    
                                       ),
                                       shinydashboard::box(width=6,
                                                           title= h4(strong("Specify sensitivity parameters and thresholds")),
@@ -450,8 +452,13 @@ hr(),
                                                                          shiny_iconlink() %>%
                                                                              bs_embed_popover(title = 'Number of iterates to be used when estimating confidence intervals. We recommend at least 1,000.'))
                                                           )
-                                      )
+                                      ),  # closes "specify sensitivity parameters and thresholds"
+                                      
                                   ),  ##closes fluidRow
+                                  
+                                  br(),
+                                  
+                                  "Note: Robust estimation may take up to a few minutes depending on the size of your dataset.",
                                   
                                   hr(),
                                   
@@ -474,7 +481,6 @@ hr(),
                                       span( htmlOutput("calibrated_cm_messages"), style="color:red"), width = 8
                                   ),
                                   
-                                  hr(),
                                   
                                   ### used for plot only:
                                   shinydashboard::box(width=6,
@@ -487,8 +493,15 @@ hr(),
                                                           shinyInput_label_embed(
                                                               shiny_iconlink() %>%
                                                                   bs_embed_popover(title = 'used for plot only')),
-                                                      actionButton(inputId = 'calibrated_plot', label='Generate plot')
+                                                      actionButton(inputId = 'calibrated_plot', label='Generate plot'),
+                                                      
+                                                      br(),
+                                                      
+                                                      "Note: This may take up to a few minutes depending on the size of your dataset.",
+                                                      
                                   ),
+                                  
+                            
                                   
                                   mainPanel(
                                       plotOutput('calibrated_plot1')
