@@ -378,7 +378,7 @@ hr(),
                      
                      hr(),
                      
-                     tabsetPanel(
+                     tabsetPanel(id="intab",
                          tabPanel("Robust estimation (homogeneous bias across studies)",
                                   fluidRow(
                                       tags$style(type = "text/css",

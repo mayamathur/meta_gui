@@ -1,0 +1,481 @@
+{
+  "input": {
+    ".clientValue-default-plotlyCrosstalkOpts": {
+      "on": "plotly_click",
+      "persistent": false,
+      "dynamic": false,
+      "selectize": false,
+      "opacityDim": 0.2,
+      "selected": {
+        "opacity": 1
+      },
+      "debounce": 0,
+      "color": [
+
+      ]
+    },
+    "alpha": 0.05,
+    "calibrated_Bmax": 4,
+    "calibrated_Bmin": 1,
+    "calibrated_calculate": 5,
+    "calibrated_method": "calibrated",
+    "calibrated_muB": 1.5,
+    "calibrated_plot": 2,
+    "calibrated_q": 0.5,
+    "calibrated_r": 0.5,
+    "calibrated_R": 2000,
+    "calibrated_scale": "RR",
+    "calibrated_tail": "above",
+    "calibrated_uploaddat": {
+      "name": [
+        "gbc_prepped.csv"
+      ],
+      "size": [
+        22356
+      ],
+      "type": [
+        "text/csv"
+      ],
+      "datapath": [
+        "0.csv"
+      ]
+    },
+    "calibrated_vi.name": "vyi",
+    "calibrated_yi.name": "yi",
+    "deltaOLS": 1,
+    "est.HR.com": null,
+    "est.HR.rare": null,
+    "est.MD": 0,
+    "est.OR.com": null,
+    "est.OR.rare": null,
+    "est.RR": null,
+    "estOLS": null,
+    "grid": 0.0001,
+    "hi.HR.com": null,
+    "hi.HR.rare": null,
+    "hi.OR.com": null,
+    "hi.OR.rare": null,
+    "hi.RR": null,
+    "intab": "Robust estimation (homogeneous bias across studies)",
+    "lo.HR.com": null,
+    "lo.HR.rare": null,
+    "lo.OR.com": null,
+    "lo.OR.rare": null,
+    "lo.RR": null,
+    "makeplot": false,
+    "n00": null,
+    "n01": null,
+    "n10": null,
+    "n11": null,
+    "navbar": "Sensitivity analysis for the percentage of meaningfully strong effects",
+    "outcomeType": "RR",
+    "parametric_Bmax": 4,
+    "parametric_Bmin": 1,
+    "parametric_calculate": 0,
+    "parametric_method": "parametric",
+    "parametric_muB": null,
+    "parametric_plot": 0,
+    "parametric_prop_t2": null,
+    "parametric_q": null,
+    "parametric_r": null,
+    "parametric_scale": "RR",
+    "parametric_t2": null,
+    "parametric_tail": "above",
+    "parametric_vt2": null,
+    "parametric_vyr": null,
+    "parametric_yr": null,
+    "plotly_afterplot-A": "\"curveOfExplainAway\"",
+    "sdOLS": null,
+    "se.MD": null,
+    "seOLS": null,
+    "show_instructions_1": false,
+    "show_instructions_2": false,
+    "trueHRcom": 1,
+    "trueHRrare": 1,
+    "trueMD": 0,
+    "trueOLS": 0,
+    "trueORcom": 1,
+    "trueORrare": 1,
+    "trueRD": 0,
+    "trueRR": 1
+  },
+  "output": {
+    "calibrated_plot1": {
+      "src": "[image data sha1: 44fa55399efb5bc92b64ce558d5e27a93be3a676]",
+      "width": 611,
+      "height": 400,
+      "coordmap": {
+        "panels": [
+          {
+            "domain": {
+              "left": -0.04,
+              "right": 1.04,
+              "bottom": -0.04,
+              "top": 1.04
+            },
+            "range": {
+              "left": 0,
+              "right": 611,
+              "bottom": 399,
+              "top": -1
+            },
+            "log": {
+              "x": null,
+              "y": null
+            },
+            "mapping": {
+
+            }
+          }
+        ],
+        "dims": {
+          "width": 611,
+          "height": 400
+        }
+      }
+    },
+    "calibrated_results_minbias": "Minimum bias factor (RR scale) to reduce to less than 0.5 the proportion of studies with population causal effects above RR = 0.5 :",
+    "calibrated_results_minconf": "Minimum confounding strength (RR scale) to reduce to less than 0.5 the proportion of studies with population causal effects above RR = 0.5 :",
+    "calibrated_results_prop": "Proportion of studies with population causal effects above RR = 0.5 :",
+    "calibrated_text1": {
+      "message": "dat does not contain a column named vi.name",
+      "call": [
+        "Phat_causal(q = q, B = muB, tail = tail, muB.toward.null = muB.toward.null, ",
+        "    dat = dat, yi.name = yi.name, vi.name = vi.name)"
+      ],
+      "type": null
+    },
+    "calibrated_text2": {
+      "message": "dat does not contain a column named vi.name",
+      "call": [
+        "Phat_causal(q = q, B = muB, tail = tail, muB.toward.null = muB.toward.null, ",
+        "    dat = dat, yi.name = yi.name, vi.name = vi.name)"
+      ],
+      "type": null
+    },
+    "calibrated_text3": {
+      "message": "dat does not contain a column named vi.name",
+      "call": [
+        "Phat_causal(q = q, B = muB, tail = tail, muB.toward.null = muB.toward.null, ",
+        "    dat = dat, yi.name = yi.name, vi.name = vi.name)"
+      ],
+      "type": null
+    },
+    "curveOfExplainAway": {
+      "x": {
+        "data": [
+          {
+            "visible": false,
+            "showlegend": false,
+            "xaxis": null,
+            "yaxis": null,
+            "hoverinfo": "text",
+            "frame": null
+          },
+          {
+            "x": 5,
+            "y": 5,
+            "text": "(Enter your point estimate)",
+            "hovertext": "x: 5<br />y: 5",
+            "textfont": {
+              "size": 14.6645669291339,
+              "color": "rgba(0,0,0,1)"
+            },
+            "type": "scatter",
+            "mode": "text",
+            "hoveron": "points",
+            "showlegend": false,
+            "xaxis": "x",
+            "yaxis": "y",
+            "hoverinfo": "text",
+            "frame": null
+          }
+        ],
+        "layout": {
+          "margin": {
+            "t": 25.7412480974125,
+            "r": 7.30593607305936,
+            "b": 39.6955859969559,
+            "l": 48.9497716894977
+          },
+          "font": {
+            "color": "rgba(0,0,0,1)",
+            "family": "",
+            "size": 14.6118721461187
+          },
+          "xaxis": {
+            "domain": [
+              0,
+              1
+            ],
+            "automargin": true,
+            "type": "linear",
+            "autorange": false,
+            "range": [
+              -0.5,
+              10.5
+            ],
+            "tickmode": "array",
+            "ticktext": [
+              "0.0",
+              "2.5",
+              "5.0",
+              "7.5",
+              "10.0"
+            ],
+            "tickvals": [
+              0,
+              2.5,
+              5,
+              7.5,
+              10
+            ],
+            "categoryorder": "array",
+            "categoryarray": [
+              "0.0",
+              "2.5",
+              "5.0",
+              "7.5",
+              "10.0"
+            ],
+            "nticks": null,
+            "ticks": "",
+            "tickcolor": null,
+            "ticklen": 3.65296803652968,
+            "tickwidth": 0,
+            "showticklabels": true,
+            "tickfont": {
+              "color": "rgba(77,77,77,1)",
+              "family": "",
+              "size": 11.689497716895
+            },
+            "tickangle": 0,
+            "showline": false,
+            "linecolor": null,
+            "linewidth": 0,
+            "showgrid": true,
+            "gridcolor": "rgba(235,235,235,1)",
+            "gridwidth": 0.66417600664176,
+            "zeroline": false,
+            "anchor": "y",
+            "title": {
+              "text": "Risk ratio for exposure-confounder relationship",
+              "font": {
+                "color": "rgba(0,0,0,1)",
+                "family": "",
+                "size": 14.6118721461187
+              }
+            },
+            "hoverformat": ".2f"
+          },
+          "yaxis": {
+            "domain": [
+              0,
+              1
+            ],
+            "automargin": true,
+            "type": "linear",
+            "autorange": false,
+            "range": [
+              -0.5,
+              10.5
+            ],
+            "tickmode": "array",
+            "ticktext": [
+              "0.0",
+              "2.5",
+              "5.0",
+              "7.5",
+              "10.0"
+            ],
+            "tickvals": [
+              0,
+              2.5,
+              5,
+              7.5,
+              10
+            ],
+            "categoryorder": "array",
+            "categoryarray": [
+              "0.0",
+              "2.5",
+              "5.0",
+              "7.5",
+              "10.0"
+            ],
+            "nticks": null,
+            "ticks": "",
+            "tickcolor": null,
+            "ticklen": 3.65296803652968,
+            "tickwidth": 0,
+            "showticklabels": true,
+            "tickfont": {
+              "color": "rgba(77,77,77,1)",
+              "family": "",
+              "size": 11.689497716895
+            },
+            "tickangle": 0,
+            "showline": false,
+            "linecolor": null,
+            "linewidth": 0,
+            "showgrid": true,
+            "gridcolor": "rgba(235,235,235,1)",
+            "gridwidth": 0.66417600664176,
+            "zeroline": false,
+            "anchor": "x",
+            "title": {
+              "text": "Risk ratio for confounder-outcome relationship",
+              "font": {
+                "color": "rgba(0,0,0,1)",
+                "family": "",
+                "size": 14.6118721461187
+              }
+            },
+            "hoverformat": ".2f"
+          },
+          "shapes": [
+            {
+              "type": "rect",
+              "fillcolor": null,
+              "line": {
+                "color": null,
+                "width": 0,
+                "linetype": [
+
+                ]
+              },
+              "yref": "paper",
+              "xref": "paper",
+              "x0": 0,
+              "x1": 1,
+              "y0": 0,
+              "y1": 1
+            }
+          ],
+          "showlegend": false,
+          "legend": {
+            "bgcolor": null,
+            "bordercolor": null,
+            "borderwidth": 0,
+            "font": {
+              "color": "rgba(0,0,0,1)",
+              "family": "",
+              "size": 11.689497716895
+            }
+          },
+          "hovermode": "closest",
+          "barmode": "relative"
+        },
+        "config": {
+          "doubleClick": "reset",
+          "showSendToCloud": false
+        },
+        "source": "A",
+        "highlight": {
+          "on": "plotly_click",
+          "persistent": false,
+          "dynamic": false,
+          "selectize": false,
+          "opacityDim": 0.2,
+          "selected": {
+            "opacity": 1
+          },
+          "debounce": 0
+        },
+        "shinyEvents": [
+          "plotly_hover",
+          "plotly_click",
+          "plotly_selected",
+          "plotly_relayout",
+          "plotly_brushed",
+          "plotly_brushing",
+          "plotly_clickannotation",
+          "plotly_doubleclick",
+          "plotly_deselect",
+          "plotly_afterplot",
+          "plotly_sunburstclick"
+        ],
+        "base_url": "https://plot.ly"
+      },
+      "evals": [
+
+      ],
+      "jsHooks": [
+
+      ],
+      "deps": [
+        {
+          "name": "typedarray",
+          "version": "0.1",
+          "src": {
+            "href": "typedarray-0.1"
+          },
+          "meta": null,
+          "script": "typedarray.min.js",
+          "stylesheet": null,
+          "head": null,
+          "attachment": null,
+          "all_files": false
+        },
+        {
+          "name": "jquery",
+          "version": "1.11.3",
+          "src": {
+            "href": "jquery-1.11.3"
+          },
+          "meta": null,
+          "script": "jquery.min.js",
+          "stylesheet": null,
+          "head": null,
+          "attachment": null,
+          "package": null,
+          "all_files": true
+        },
+        {
+          "name": "crosstalk",
+          "version": "1.0.0",
+          "src": {
+            "href": "crosstalk-1.0.0"
+          },
+          "meta": null,
+          "script": "js/crosstalk.min.js",
+          "stylesheet": "css/crosstalk.css",
+          "head": null,
+          "attachment": null,
+          "package": null,
+          "all_files": true
+        },
+        {
+          "name": "plotly-htmlwidgets-css",
+          "version": "1.49.4",
+          "src": {
+            "href": "plotly-htmlwidgets-css-1.49.4"
+          },
+          "meta": null,
+          "script": null,
+          "stylesheet": "plotly-htmlwidgets.css",
+          "head": null,
+          "attachment": null,
+          "all_files": false
+        },
+        {
+          "name": "plotly-main",
+          "version": "1.49.4",
+          "src": {
+            "href": "plotly-main-1.49.4"
+          },
+          "meta": null,
+          "script": "plotly-latest.min.js",
+          "stylesheet": null,
+          "head": null,
+          "attachment": null,
+          "all_files": false
+        }
+      ]
+    },
+    "result.text": "E-value for point estimate: Enter your point estimate"
+  },
+  "export": {
+
+  }
+}

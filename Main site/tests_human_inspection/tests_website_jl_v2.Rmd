@@ -1,9 +1,9 @@
 ---
   title: "jl tests_website_v2"
-output:
+  output:
   html_document:
   df_print: paged
-editor_options:
+  editor_options:
   chunk_output_type: console
 ---
   
@@ -11,12 +11,14 @@ editor_options:
 ```{r warning=FALSE, message=FALSE, results=FALSE}
 library(testthat)
 
+# remove.packages("EValue")
+# install.packages("EValue")
+library(EValue)
 
-#library(EValue)
-
-detach("package:EValue", unload = TRUE)
-setwd("~/Dropbox/Personal computer/Independent studies/R packages/EValue package (git)/evalue_package/EValue/R")
-source("meta-analysis.R")
+# detach("package:EValue", unload = TRUE)
+# setwd("~/Dropbox/Personal computer/Independent studies/R packages/EValue package (git)/evalue_package/EValue/R")
+# setwd("~/Box Sync/jlee/Maya/evalue/EValue/R")
+# source("~/Box Sync/jlee/Maya/evalue/EValue/R/meta-analysis.R")
 
 
 library(devtools)
@@ -28,7 +30,7 @@ library(boot)
 library(here)
 ```
 
-### Below tests run on 11/19/20 with github code pull on 11/19/20:
+### Below tests run on 01/07/21 with github code pull on 01/06/21:
 ```{r}
 # make file paths relative so they run on other machines
 setwd(here())
@@ -46,13 +48,13 @@ source("helper_testthat.R")
 #### test1 gbc_prepped.csv file - correct
 ```{r  error=TRUE}
 
-d = read.csv("tests_human_inspection/Datasets for website test/gbc_prepped.csv", stringsAsFactors = FALSE)
+d = read.csv("Datasets for website test/gbc_prepped.csv", stringsAsFactors = FALSE)
 
 # note: log(0.9) = -0.1053605
 confounded_meta(method="calibrated",
                 q = log(.9),
                 r = 0.1,
-                muB = 0,
+                muB = log(1),
                 tail = "below",
                 yi.name = "yi",
                 vi.name = "vi",
@@ -62,12 +64,11 @@ confounded_meta(method="calibrated",
 # [1] "All values of t are equal to  1 \n Cannot calculate confidence intervals"
 # Prop is already less than or equal to r even with no confounding, so Tmin and Gmin are simply equal to 1. No confounding at all is required to make the specified shift.
 #   Value        Est         SE CI.lo      CI.hi
-# 1  Prop 0.02358491 0.01667209     0 0.08962264
+# 1  Prop 0.02358491 0.01553758     0 0.08018868
 # 2  Tmin 1.00000000 0.00000000     1         NA
 # 3  Gmin 1.00000000 0.00000000     1         NA
-
-### Website output: 
-knitr::include_graphics("test_1a.png")
+# Warning message:
+# In norm.inter(t, adj.alpha) : extreme order statistics used as endpoints
 
 
 sens_plot(method="calibrated",
@@ -84,37 +85,26 @@ sens_plot(method="calibrated",
 
 ### Website output: 
 
-knitr::include_graphics("test_1b.png")
+knitr::include_graphics("mytest-expected/001.png")
 ```
 
 #### test2 gbc_prepped.csv file - correct
 ```{r  error=TRUE}
-d = read.csv("tests_human_inspection/Datasets for website test/gbc_prepped.csv")
+d = read.csv("Datasets for website test/gbc_prepped.csv")
 
 # note: log(0.5) = -0.6931472
 confounded_meta(method="calibrated",
                 q = log(0.5),
                 r = 0.5,
-                muB = 0.5,
+                muB = log(0.5),
                 tail = "above",
                 yi.name = "yi",
                 vi.name = "vi",
                 dat = d,
                 R = 500)
 ### R output:
-# The confidence interval and/or standard error for the proportion were not estimable via bias-corrected and accelerated bootstrapping. You can try increasing R.
-#   Value      Est         SE    CI.lo    CI.hi
-# 1  Prop 1.000000         NA       NA       NA
-# 2  Tmin 2.133700 0.02639639 2.086307 2.193844
-# 3  Gmin 3.689005 0.05413210 3.591753 3.812209
-
-
-### Website output (passing on log scale): 
-knitr::include_graphics("test_2a_log.png")
-
-### Website output (passing on RR scale): 
-knitr::include_graphics("test_2a_rr.png")
-
+# Error in confounded_meta(method = "calibrated", q = log(0.5), r = 0.5,  : 
+#   Must have muB > 0. Use the muB.toward.null argument instead if you want to consider bias away from the null. See Details.
 
 sens_plot(method="calibrated",
           type = "line",
@@ -139,38 +129,42 @@ sens_plot(method="calibrated",
 # 4: In norm.inter(t, adj.alpha) :
 #   extreme order statistics used as endpoints
 
-### Website output: 
-knitr::include_graphics("test_2a_plot.png")
+### Website output (passing on log scale): 
+knitr::include_graphics("mytest-expected/002.png")
+
+### Website output (passing on RR scale): 
+knitr::include_graphics("mytest-expected/003.png")
+
 ```
 
 #### test3 gbc_prepped.csv file - correct
 ```{r error=TRUE}
-d = read.csv("tests_human_inspection/Datasets for website test/gbc_prepped.csv")
+d = read.csv("Datasets for website test/gbc_prepped.csv")
 
 ## get error for column name
 confounded_meta(method="calibrated",
                 q = log(.5),
                 r = 0.5,
-                muB = 0.5,
+                muB = log(1.5),
                 tail = "above",
                 yi.name = "yi",
                 vi.name = "vyi",
                 dat = d,
                 R = 2000)
 ### R output:
-# Error in Phat_causal(q = q, B = muB, tail = tail, dat = dat, yi.name = yi.name,  : 
-#  dat does not contain a column named vi.name 
+ # Error in Phat_causal(q = q, B = muB, tail = tail, muB.toward.null = muB.toward.null,  : 
+ #  dat does not contain a column named vi.name 
 
 ### Website output: 
-knitr::include_graphics("test_3.png")
+knitr::include_graphics("mytest-expected/004.png")
 ```
 
 #### test4 flegal_prepped.csv file - correct
 ```{r error=TRUE}
-d = read.csv("tests_human_inspection/Datasets for website test/flegal_prepped.csv")
+d = read.csv("Datasets for website test/flegal_prepped.csv")
 
 ## on log-RR scale:
-# log(.5)
+# note: log(0.5) = -0.6931472
 confounded_meta(method= "calibrated",
                 q = -0.6931472,
                 r = 0.5,
@@ -181,21 +175,19 @@ confounded_meta(method= "calibrated",
                 dat = d,
                 R = 500)
 ### R output:
-# The confidence interval and/or standard error for the proportion were not estimable via bias-corrected and accelerated bootstrapping. You can try increasing R.
+# [1] "All values of t are equal to  1 \n Cannot calculate confidence intervals"
+# The confidence interval and/or standard error for the proportion were not estimable via bias-corrected and accelerated bootstrapping. You can try increasing the number of bootstrap iterates or choosing a less extreme threshold.
 #   Value      Est         SE    CI.lo    CI.hi
-# 1  Prop 1.000000         NA       NA       NA
-# 2  Tmin 1.834157 0.02938043 1.792858 1.911209
-# 3  Gmin 3.071078 0.06101954 2.985118 3.230871
-
-### Website output: 
-knitr::include_graphics("test_4_log.png")
+# 1  Prop 1.000000 0.00000000       NA       NA
+# 2  Tmin 1.834157 0.03195267 1.783244 1.905911
+# 3  Gmin 3.071078 0.06635321 2.965072 3.219907
 
 sens_plot(method= "calibrated",
           type = "line",
           q = -0.6931472,
           tail = "above",
-          Bmin = 1,
-          Bmax = 4,
+          Bmin = 0,
+          Bmax = 1.38629436111989,
           yi.name = "yi",
           vi.name = "vi",
           dat = d,
@@ -207,88 +199,87 @@ sens_plot(method= "calibrated",
 
 ### Website output:
 # pass input on log scale
-knitr::include_graphics("test_4_plot_log.png")
-# pass input on RR scale
-knitr::include_graphics("test_4_plot_rr.png")
+knitr::include_graphics("mytest-expected/005.png")
 ```
 
 #### test5 flegal_prepped.csv file - correct
 ```{r error=TRUE}
-d = read.csv("tests_human_inspection/Datasets for website test/flegal_prepped.csv")
-
+d = read.csv("Datasets for website test/flegal_prepped.csv")
+# note: log(0.5) = -0.6931472
+# log(1.5) = 0.4054651
 confounded_meta(method="calibrated",
                 q = log(.5),
                 r = 0.1,
-                muB = .5,
+                muB = log(1.5),
                 tail = "above",
                 yi.name = "yi",
                 vi.name = "vi",
                 dat = d,
                 R = 500)
 ### R output:
-# The confidence interval and/or standard error for the proportion were not estimable via bias-corrected and accelerated bootstrapping. You can try increasing R.
+# [1] "All values of t are equal to  1 \n Cannot calculate confidence intervals"
+# The confidence interval and/or standard error for the proportion were not estimable via bias-corrected and accelerated bootstrapping. You can try increasing the number of bootstrap iterates or choosing a less extreme threshold.
 #   Value      Est         SE    CI.lo    CI.hi
-# 1  Prop 1.000000         NA       NA       NA
-# 2  Tmin 2.177725 0.08650298 2.065633 2.354270
-# 3  Gmin 3.779212 0.17699847 3.549279 4.139856
+# 1  Prop 1.000000 0.00000000       NA       NA
+# 2  Tmin 2.177725 0.08883057 2.061940 2.353965
+# 3  Gmin 3.779212 0.18173756 3.541689 4.139234
 
 ### Website output: 
 # pass on log scale
-knitr::include_graphics("test_5_log.png")
+knitr::include_graphics("mytest-expected/006.png")
 
 # pass on RR scale
-knitr::include_graphics("test_5_rr.png")
+knitr::include_graphics("mytest-expected/007.png")
 ```
 
 #### test6 flegal_prepped.csv file  - correct
 ```{r error=TRUE}
-d = read.csv("tests_human_inspection/Datasets for website test/flegal_prepped.csv")
+d = read.csv("Datasets for website test/flegal_prepped.csv")
 
 confounded_meta(method="calibrated",
                 q = log(1.2),
                 r = 1.0,
-                muB = 0,
+                muB = log(1),
                 tail = "above",
                 yi.name = "yi",
                 vi.name = "vi",
                 dat = d,
                 R = 500)
 ### R output:
-# The confidence interval and/or standard error for the proportion were not estimable via bias-corrected and accelerated bootstrapping. You can try increasing R.
 # [1] "All values of t are equal to  1 \n Cannot calculate confidence intervals"
-# The confidence interval and/or standard error for Tmin and Gmin were not estimable via bias-corrected and accelerated bootstrapping. You can try increasing R.
 # Prop is already less than or equal to r even with no confounding, so Tmin and Gmin are simply equal to 1. No confounding at all is required to make the specified shift.
+#   Value        Est         SE       CI.lo      CI.hi
+# 1  Prop 0.03571429 0.01584981 0.007142857 0.06428571
+# 2  Tmin 1.00000000 0.00000000 1.000000000         NA
+# 3  Gmin 1.00000000 0.00000000 1.000000000         NA
 
 ### Website output: 
-knitr::include_graphics("test_6_rr.png")
+knitr::include_graphics("mytest-expected/008.png")
 ```
 
 #### test7 data_calib_test_1-1.csv file - correct
 ```{r error=TRUE}
-d = read.csv("tests_human_inspection/Datasets for website test/data_calib_test_1-1.csv")
+d = read.csv("Datasets for website test/data_calib_test_1-1.csv")
 
 ## an example with crazy input
 confounded_meta(method="calibrated",
                 q = log(0),
                 r = 0,
-                muB = 0,
+                muB = log(1),
                 tail = "above",
                 yi.name = "est",
                 vi.name = "var",
                 dat = d,
                 R = 0)
 ### R output:
-# The confidence interval and/or standard error for the proportion were not estimable via bias-corrected and accelerated bootstrapping. You can try increasing R.
 # [1] "All values of t are equal to  NaN \n Cannot calculate confidence intervals"
-# The confidence interval and/or standard error for Tmin and Gmin were not estimable via bias-corrected and accelerated bootstrapping. You can try increasing R.
+# The confidence interval and/or standard error for the proportion were not estimable via bias-corrected and accelerated bootstrapping. You can try increasing the number of bootstrap iterates or choosing a less extreme threshold.
+# [1] "All values of t are equal to  NaN \n Cannot calculate confidence intervals"
+# The confidence interval and/or standard error for Tmin and Gmin were not estimable via bias-corrected and accelerated bootstrapping. You can try increasing the number of bootstrap iterates or choosing a less extreme threshold.
 #   Value Est SE CI.lo CI.hi
 # 1  Prop   1 NA    NA    NA
 # 2  Tmin Inf NA    NA    NA
 # 3  Gmin NaN NA    NA    NA
-
-### Website output: 
-knitr::include_graphics("test_7_rr.png")
-
 
 sens_plot(method="calibrated",
           type = "line",
@@ -305,7 +296,7 @@ sens_plot(method="calibrated",
 # Error in seq.default(Bmin, Bmax, 0.01) : 'from' must be a finite number 
 
 ### Website output: 
-knitr::include_graphics("test_7_plot.png")
+knitr::include_graphics("mytest-expected/009.png")
 ```
 
 #### test8 - correct
@@ -327,13 +318,6 @@ confounded_meta(method="parametric",
 # 2  Tmin 1.4235523 0.2369612 1.000000 1.8879878
 # 3  Gmin 2.2000501 0.5187985 1.183224 3.2168766
 
-### Website output: 
-# passing input on RR scale
-knitr::include_graphics("test_8_rr.png")
-
-knitr::include_graphics("test_8_log.png")
-
-
 sens_plot(method = "parametric",
           type="line",
           q=log(1.1),
@@ -353,10 +337,10 @@ sens_plot(method = "parametric",
 
 ### Website output:
 # passing input on RR scale
-knitr::include_graphics("test_8_plot_rr.png")
+knitr::include_graphics("mytest-expected/010.png")
 # passing input on log-RR scale
 
-knitr::include_graphics("test_8_plot_log.png")
+knitr::include_graphics("mytest-expected/011.png")
 ```
 
 #### test9 - correct
@@ -375,10 +359,10 @@ confounded_meta(method="parametric",
                 vt2=0)
 ### R output:
 # Error in confounded_meta(method = "parametric", q = log(0), r = 0, tail = "above",  : 
-#   Must have t2 > sigB^2
+#   Must have muB > 0. Use the muB.toward.null argument instead if you want to consider bias away from the null. See Details.
 
 ### Website output: 
-knitr::include_graphics("test_9.png")
+knitr::include_graphics("mytest-expected/012.png")
 ```
 
 
@@ -407,10 +391,6 @@ confounded_meta(method="parametric",
 # In confounded_meta(method = "parametric", q = log(0.5), r = 0.75,  :
 #   Prop is close to 0 or 1. We recommend choosing method = "calibrated" or alternatively using bias-corrected and accelerated bootstrapping to estimate all inference in this case.
 
-### Website output: 
-knitr::include_graphics("test_10a.png")
-
-
 sens_plot(method = "parametric",
           type="line",
           q=log(.5),
@@ -429,7 +409,7 @@ sens_plot(method = "parametric",
 #   Calculating parametric confidence intervals in the plot. For values of Phat that are less than 0.15 or greater than 0.85, these confidence intervals may not perform well.
 
 ### Website output: 
-knitr::include_graphics("test_10b.png")
+knitr::include_graphics("mytest-expected/013.png")
 ```
 
 
@@ -454,9 +434,6 @@ confounded_meta(method="parametric",
 # 2  Tmin 1.2252345 0.5534300 1.0000000 2.3099373
 # 3  Gmin 1.7505582 1.3174664 1.0000000 4.3327449
 
-### Website output: 
-knitr::include_graphics("test_11a.png")
-
 sens_plot(method = "parametric",
           type="line",
           q=0.1823216,
@@ -464,8 +441,8 @@ sens_plot(method = "parametric",
           vyr=0.05,
           t2=0.25,
           vt2=0.05,
-          Bmin=1,
-          Bmax=6,
+          Bmin=0,
+          Bmax=1.791759,
           sigB=sqrt(0.15*0.25),
           tail="below" )
 
@@ -475,14 +452,14 @@ sens_plot(method = "parametric",
 #   Calculating parametric confidence intervals in the plot. For values of Phat that are less than 0.15 or greater than 0.85, these confidence intervals may not perform well.
 
 ### Website output: 
-knitr::include_graphics("test_11b.png")
+knitr::include_graphics("mytest-expected/014.png")
 ```
 
 
 #### test12 kodama_prepped.csv - correct
 ```{r error=TRUE}
 # MM did this one
-d = read.csv("tests_human_inspection/Datasets for website test/kodama_prepped.csv")
+d = read.csv("Datasets for website test/kodama_prepped.csv")
 
 confounded_meta(method="calibrated",
                 q=log(1.5),
@@ -494,14 +471,15 @@ confounded_meta(method="calibrated",
                 yi.name = "yi",
                 vi.name = "vi")
 ### R output:
-# The confidence interval and/or standard error for the proportion were not estimable via bias-corrected and accelerated bootstrapping. You can try increasing R.
-#   Value      Est        SE CI.lo    CI.hi
-# 1  Prop 0.937500        NA    NA       NA
-# 2  Tmin 1.003351 0.0258029     1 1.131446
-# 3  Gmin 1.061336 0.1212162     1 1.517092
+#   Value      Est         SE  CI.lo    CI.hi
+# 1  Prop 0.937500 0.09653012 0.4375 1.000000
+# 2  Tmin 1.003351 0.02353298 1.0000 1.119580
+# 3  Gmin 1.061336 0.11581616 1.0000 1.485475
+# Warning message:
+# In norm.inter(t, adj.alpha) : extreme order statistics used as endpoints
 
 ### Website output: 
-knitr::include_graphics("test_12.png")
+knitr::include_graphics("mytest-expected/015.png")
 ```
 
 
