@@ -26,13 +26,13 @@ navbarPage( "Sensitivity analysis for unmeasured confounding in meta-analyses", 
                      
                      
                      conditionalPanel(  condition = "input.show_instructions_1 == true",
-                                        HTML(paste('This website implements the sensitivity analyses described in <a href="https://www.tandfonline.com/doi/full/10.1080/01621459.2018.1529598">Mathur & VanderWeele (2020a)</a> and <a href="https://annals.org/aim/fullarticle/2643434/sensitivity-analysis-observational-research-introducing-e-value">VanderWeele & Ding (2017)</a>.',
+                                        HTML(paste('This website implements the sensitivity analyses described in <a href="https://www.tandfonline.com/doi/full/10.1080/01621459.2018.1529598">Mathur & VanderWeele (2020a)</a>, <a href="https://pubmed.ncbi.nlm.nih.gov/32141922/">Mathur & VanderWeele (2020b)</a>, and <a href="https://annals.org/aim/fullarticle/2643434/sensitivity-analysis-observational-research-introducing-e-value">VanderWeele & Ding (2017)</a>.',
                                             
                                             
                                             "<b>Sensitivity analysis for the pooled point estimate</b>",
                                             
                                             
-                                            'This tab computes the E-value for the pooled point estimate of a meta-analysis (Section 7.2 of <a href="https://www.tandfonline.com/doi/full/10.1080/01621459.2018.1529598">Mathur & VanderWeele, 2020a</a>; see <a href="https://annals.org/aim/fullarticle/2643434/sensitivity-analysis-observational-research-introducing-e-value">VanderWeele & Ding (2017)</a> for more on E-values in general). This meta-analytic E-value represents the average severity of confounding in the meta-analyzed studies (i.e., the minimum strength of association
+                                            'This tab computes the E-value for the pooled point estimate of a meta-analysis (Section 7.2 of <a href="https://www.tandfonline.com/doi/full/10.1080/01621459.2018.1529598">Mathur & VanderWeele, 2020a</a>; see <a href="https://annals.org/aim/fullarticle/2643434/sensitivity-analysis-observational-research-introducing-e-value">VanderWeele & Ding (2017)</a> for more on E-values in general). This meta-analysis E-value represents the average severity of confounding in the meta-analyzed studies (i.e., the minimum strength of association
                                             on the risk ratio scale that unmeasured confounder(s) would need to have with both the exposure
                                             and the outcome, conditional on the measured covariates), to fully explain away the observed meta-analytic point estimate in the sense of shifting it to the null. Note that for outcome types other than relative risks, assumptions
                                             are involved with the approximate conversions used. See <a href="https://annals.org/aim/fullarticle/2643434/sensitivity-analysis-observational-research-introducing-e-value">VanderWeele & Ding (2017)</a> for details.',
@@ -47,7 +47,7 @@ navbarPage( "Sensitivity analysis for unmeasured confounding in meta-analyses", 
                                             
                                             "<b>Interpreting the results</b>",
                                             
-                                            "For example, if your meta-analytic point estimate on the relative risk scale is 1.5 (95% confidence interval: [1.4, 1.5]), you will obtain an E-value for the point estimate of 2.37 and an E-value for the lower confidence interval limit of 2.15. This means that if, hypothetically, the meta-analyzed studies were subject to confounding such that, on average across the studies, there were unmeasured confounder(s) that were associated with the studies' exposures and outcomes by relative risks of at least 2.37 each, this amount of average confounding could potentially explain away the point estimate of 1.5 (i.e., to have the true causal effect be a relative risk of 1), but weaker average confounding could not. Similarly, if this strength of average confounding were at 2.15 across studies, this amount of confounding could potentially shift the confidence interval to include the null, but weaker average confounding could not.",
+                                            "For example, if your meta-analytic point estimate on the relative risk scale is 1.5 (95% confidence interval: [1.4, 1.5]), you will obtain an E-value for the point estimate of 2.37 and an E-value for the lower confidence interval limit of 2.15. This means that if, hypothetically, the meta-analyzed studies were subject to confounding such that, on average across the studies, there were unmeasured confounder(s) that were associated with the studies' exposures and outcomes by relative risks of at least 2.37 each, this amount of average confounding could potentially explain away the point estimate of 1.5 (i.e., to have the true causal effect be a relative risk of 1), but weaker average confounding could not. Similarly, if this strength of average confounding were at least 2.15 across studies, this amount of confounding could potentially shift the confidence interval to include the null, but weaker average confounding could not.",
                                             
                                             "<b>A caveat about the pooled point estimate</b>",
                                             
@@ -56,148 +56,13 @@ navbarPage( "Sensitivity analysis for unmeasured confounding in meta-analyses", 
                                             sep="<br/><br/>"))
                                  
                                  
-# <<<<<<< HEAD
-#                      ),
-#                      
-#                      width=6,
-#                      
-#                      mainPanel(
-#                          selectInput( "outcomeType", label = "Outcome type",
-#                                       choices = c( "Relative risk / rate ratio" = "RR", 
-#                                                    "Odds ratio (outcome prevalence <15%)" = "OR.rare",
-#                                                    "Odds ratio (outcome prevalence >15%)" = "OR.com",
-#                                                    "Hazard ratio (outcome prevalence <15%)" = "HR.rare",
-#                                                    "Hazard ratio (outcome prevalence >15%)" = "HR.com",
-#                                                    "Standardized mean difference (d)" = "MD", 
-#                                                    "Risk difference" = "RD",
-#                                                    "Linear regression coefficient" = "OLS" ) ),
-#                          
-#                          
-#                          # conditional panels that appear depending on selected outcome type
-#                          
-#                          conditionalPanel(
-#                              condition = "input.outcomeType == 'RR' ",
-#                              
-#                              numericInput('est.RR', 'Point estimate', NA, min = 1, max = 9),
-#                              numericInput('lo.RR', 'Confidence interval lower limit', NA, min = 1, max = 9),
-#                              numericInput('hi.RR', 'Confidence interval upper limit', NA, min = 1, max = 9),
-#                              numericInput('trueRR', 'True causal effect to which to shift estimate (default: null)', 1, min = 1, max = 9) 
-#                          ) ,
-#                          
-#                          conditionalPanel(
-#                              
-#                              condition = "input.outcomeType == 'OR.rare' ",
-#                              
-#                              numericInput('est.OR.rare', 'Point estimate', NA, min = 1, max = 9),
-#                              numericInput('lo.OR.rare', 'Confidence interval lower limit', NA, min = 1, max = 9),
-#                              numericInput('hi.OR.rare', 'Confidence interval upper limit', NA, min = 1, max = 9),
-#                              numericInput('trueORrare', 'True causal effect to which to shift estimate (default: null)', 1, min = 1, max = 9)
-#                          ),
-#                          
-#                          conditionalPanel(
-#                              condition = "input.outcomeType == 'OR.com' ",
-#                              
-#                              numericInput('est.OR.com', 'Point estimate', NA, min = 1, max = 9),
-#                              numericInput('lo.OR.com', 'Confidence interval lower limit', NA, min = 1, max = 9),
-#                              numericInput('hi.OR.com', 'Confidence interval upper limit', NA, min = 1, max = 9),
-#                              numericInput('trueORcom', 'True causal effect to which to shift estimate (default: null)', 1, min = 1, max = 9)
-#                          ),
-#                          
-#                          conditionalPanel(
-#                              condition = "input.outcomeType == 'HR.rare' ",
-#                              
-#                              numericInput('est.HR.rare', 'Point estimate', NA, min = 1, max = 9),
-#                              numericInput('lo.HR.rare', 'Confidence interval lower limit', NA, min = 1, max = 9),
-#                              numericInput('hi.HR.rare', 'Confidence interval upper limit', NA, min = 1, max = 9),
-#                              numericInput('trueHRrare', 'True causal effect to which to shift estimate (default: null)', 1, min = 1, max = 9)
-#                          ),
-#                          
-#                          conditionalPanel(
-#                              condition = "input.outcomeType == 'HR.com' ",
-#                              
-#                              numericInput('est.HR.com', 'Point estimate', NA, min = 1, max = 9),
-#                              numericInput('lo.HR.com', 'Confidence interval lower limit', NA, min = 1, max = 9),
-#                              numericInput('hi.HR.com', 'Confidence interval upper limit', NA, min = 1, max = 9),
-#                              numericInput('trueHRcom', 'True causal effect to which to shift estimate (default: null)', 1, min = 1, max = 9)
-#                          ),
-#                          
-#                          conditionalPanel(
-#                              condition = "input.outcomeType == 'OLS' ",
-#                              numericInput('estOLS', 'Regression coefficient estimate', NA, min = 1, max = 9),
-#                              numericInput('seOLS', 'Standard error of coefficient', NA, min = 1, max = 9),
-#                              numericInput('sdOLS', 'Standard deviation of outcome', NA, min = 1, max = 9),
-#                              numericInput('deltaOLS', 'Contrast of interest in exposure', 1, min = 1, max = 9),
-#                              numericInput('trueOLS', 'True causal effect to which to shift estimate (on standard mean difference scale; default: null)', 0, min = 1, max = 9)
-#                          ),
-#                          
-#                          conditionalPanel(
-#                              condition = "input.outcomeType == 'MD' ",
-#                              
-#                              numericInput('est.MD', 'Point estimate', 0, min = 1, max = 9),
-#                              numericInput('se.MD', 'Standard error', NA, min = 1, max = 9),
-#                              numericInput('trueMD', 'True causal effect to which to shift estimate (default: null)', 0, min = 1, max = 9)
-#                          ),
-#                          
-#                          conditionalPanel(
-#                              condition = "input.outcomeType == 'RD' ",
-#                              
-#                              numericInput('n11', 'Number of exposed, diseased individuals', NA, min = 1, max = 9),
-#                              numericInput('n10', 'Number of exposed, non-diseased individuals', NA, min = 1, max = 9),
-#                              numericInput('n01', 'Number of unexposed, diseased individuals', NA, min = 1, max = 9),
-#                              numericInput('n00', 'Number of unexposed, non-diseased individuals', NA, min = 1, max = 9),
-#                              numericInput('alpha', 'Alpha level for confidence interval', 0.05, min = 1, max = 9),
-#                              numericInput('grid', 'Spacing for grid search of E-value', 0.0001, min = 1, max = 9),
-#                              numericInput('trueRD', 'True causal effect to which to shift estimate (default: null)', 0, min = 1, max = 9)
-#                          ),
-#                          
-#                          # display results
-#                          wellPanel(  span( textOutput("result.text") ) ), 
-#                          
-#                          # warnings if computing non-null E-value
-#                          # note: because the condition is in Javascript, have to use period instead of dollar sign to 
-#                          #  access arguments, so CANNOT have period in the variable names (e.g., "true.RR" doesn't work!)
-#                          conditionalPanel( condition = "input.outcomeType == 'RR' & input.trueRR != 1", nonnull.mess),
-#                          conditionalPanel( condition = "input.outcomeType == 'OR.rare' & input.trueORrare != 1", nonnull.mess),
-#                          conditionalPanel( condition = "input.outcomeType == 'OR.com' & input.trueORcom != 1", nonnull.mess),
-#                          conditionalPanel( condition = "input.outcomeType == 'HR.rare' & input.trueHRrare != 1", nonnull.mess),
-#                          conditionalPanel( condition = "input.outcomeType == 'HR.com' & input.trueHRcom != 1", nonnull.mess),
-#                          conditionalPanel( condition = "input.outcomeType == 'OLS' & input.trueOLS != 0", nonnull.mess),
-#                          conditionalPanel( condition = "input.outcomeType == 'MD' & input.trueMD != 0", nonnull.mess),
-#                          conditionalPanel( condition = "input.outcomeType == 'RD' & input.trueRD != 0", nonnull.mess),
-#                          
-#                          # conservatism message for OLS      
-#                          conditionalPanel( condition = "input.outcomeType == 'OLS'", OLS.mess),
-#                          
-#                          width = 6
-#                          
-#                      ),  # ends mainPanel
-#                      
-#                      # panel for contour plot
-#                      sidebarPanel(
-#                          
-#                          checkboxInput( 'makeplot', 'Show plot', FALSE ),
-#                          
-#                          conditionalPanel( condition = "input.makeplot == true",
-#                                            plotlyOutput("curveOfExplainAway", width = "400px", height = "400px") ),
-#                          
-#                          conditionalPanel( condition = "input.makeplot == true",
-#                                            HTML(paste("<br>Each point along the curve defines a joint relationship between the two sensitivity parameters that could potentially explain away the estimated effect.",
-#                                                       " If one of the two parameters is smaller than the E-value, the other must be larger, as defined by the plotted curve."))
-#                          ),
-#                          
-#                          width = 6
-#                          
-#                      ) # end contour plot panel
-# =======
-# >>>>>>> 498b7153f72a1f1c452aa9672eb3e7958144e465
             ),
             
             width=6,
 
 hr(),
 
-#bm: add spacer here
-            
+       
             mainPanel(
                 selectInput( "outcomeType", label = "Outcome type",
                              choices = c( "Relative risk / rate ratio" = "RR", 
@@ -315,7 +180,7 @@ hr(),
                 checkboxInput( 'makeplot', 'Show plot', FALSE ),
                 
                 conditionalPanel( condition = "input.makeplot == true",
-                                  plotlyOutput("curveOfExplainAway", width = "400px", height = "400px") ),
+                                  plotOutput("curveOfExplainAway", width = "400px", height = "400px") ),
                 
                 conditionalPanel( condition = "input.makeplot == true",
                                   HTML(paste("<br>Each point along the curve defines a joint relationship between the two sensitivity parameters that could potentially explain away the estimated effect.",
@@ -338,26 +203,27 @@ hr(),
                      conditionalPanel(  condition = "input.show_instructions_2 == true",
                                         HTML(paste(
              
-                         'This website implements the sensitivity analyses described in <a href="https://www.tandfonline.com/doi/full/10.1080/01621459.2018.1529598">Mathur & VanderWeele (2020a)</a> and <a href="https://annals.org/aim/fullarticle/2643434/sensitivity-analysis-observational-research-introducing-e-value">VanderWeele & Ding (2017)</a>.
+                                            
+                         'This website implements the sensitivity analyses described in <a href="https://www.tandfonline.com/doi/full/10.1080/01621459.2018.1529598">Mathur & VanderWeele (2020a)</a>, <a href="https://pubmed.ncbi.nlm.nih.gov/32141922/">Mathur & VanderWeele (2020b)</a>, and <a href="https://annals.org/aim/fullarticle/2643434/sensitivity-analysis-observational-research-introducing-e-value">VanderWeele & Ding (2017)</a>.
                        
                       <br><br><b>Sensitivity analysis for the proportion of meaningfully strong causal effects</b>
                        
                        <br><br>Here, you can choose a fixed set of sensitivity parameters (the mean of the bias factor distribution and the proportion of the estimated heterogeneity that is due to confounding)
-                       and estimate:
+                       to estimate:
                        
                        <ul>
                        <li> The proportion of meaningfully strong causal effect sizes (i.e., those stronger than a chosen threshold q)
-                       <li> The minimum bias factor that would be required to "explain away" the effect in the sense of reducing to less than r the proportion of meaningfully strong effects
+                       <li> The minimum bias factor that would be required to "explain away" the effect in the sense of reducing to less than r (e.g., 0.10 or 0.20) the proportion of meaningfully strong effects
                        <li> The minimum confounding strength (i.e., strength of association on the relative risk scale between the unmeasured confounder(s) and the exposure, as well as between the unmeasured confounder(s) and the outcome) that would be required to "explain away" the effect
                        </ul>
                        
-                       Below these three metrics appears a plot of the estimated proportion of meaningfully strong causal effects as a function of the severity of bias.,
+                       Below these three metrics appears a plot of the estimated proportion of meaningfully strong causal effects as a function of the severity of bias.
                        
             
                        <br><br><b>Choosing robust versus parametric estimation</b>
                        
    
-                       <br><br>There are two statistical methods to estimate the metrics described above. The "Robust" tab below uses a nonparametric method (<a href="https://pubmed.ncbi.nlm.nih.gov/32141922/">Mathur & VanderWeele (2020b)</a>; <a href="https://onlinelibrary.wiley.com/doi/abs/10.1002/jrsm.1345">Wang & Lee (2019)</a>) that makes no assumptions about the distribution of population effects and performs well in meta-analyses with as few as 10 studies, and performs well even when the proportion being estimated is close to 0 or 1. However, it only accommodates bias whose strength is the same in all studies (homogeneous bias). When using the robust method, you will need to upload a dataset of study-level point estimates and variance estimates because inference is conducted by bootstrapping.
+                       <br><br>There are two statistical methods to estimate the metrics described above. The "Robust" tab below uses a nonparametric method (<a href="https://pubmed.ncbi.nlm.nih.gov/32141922/">Mathur & VanderWeele (2020b)</a>; <a href="https://onlinelibrary.wiley.com/doi/abs/10.1002/jrsm.1345">Wang & Lee (2019)</a>) that makes no assumptions about the distribution of population effects, can be used in meta-analyses with as few as 10 studies, and can be used even when the proportion being estimated is close to 0 or 1. However, the robust method only accommodates bias whose strength is the same in all studies (homogeneous bias). When using the robust method, you will need to upload a dataset of study-level point estimates and variance estimates because inference is conducted by bootstrapping.
                        
                        <br><br>The "Parametric" tab uses a method that assumes that the population causal effects are approximately normal across studies and that the number of studies is large. Parametric confidence intervals should only be used when the proportion estimate is between 0.15 and 0.85, and you will get a warning message otherwise. Unlike the calibrated method, the parametric method can accommodate bias that is heterogeneous across studies, specifically bias factors that are log-normal across studies. When using the parametric method, you will specify summary estimates from your confounded meta-analysis rather than uploading a dataset.
 

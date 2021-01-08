@@ -139,7 +139,7 @@ function(input, output, session) {
     
     
     
-    output$curveOfExplainAway <- renderPlotly({
+    output$curveOfExplainAway <- renderPlot({
         
         # do not attempt to make plot unless we have the point estimate
         if( !is.na( bias.factor() ) ) {
@@ -156,23 +156,17 @@ function(input, output, session) {
                 }
             }
             
-            g <- ggplotly(
-                ggplot(data.frame(rr.eu = c(0, 20)), aes(rr.eu)) + 
-                    stat_function(fun = rr.ud) + 
-                    scale_y_continuous(limits = c(1, evals()[1]*3)) + 
-                    scale_x_continuous(limits = c(1, evals()[1]*3)) +
-                    xlab("Risk ratio for exposure-confounder relationship") + ylab("Risk ratio for confounder-outcome relationship") + 
-                    geom_point(dat = data.frame(rr.eu = evals()[1], rr.ud = evals()[1]), aes(rr.eu, rr.ud)) +
-                    geom_text(dat = data.frame(rr.eu = evals()[1], rr.ud = evals()[1]), 
-                              aes(rr.eu, rr.ud), 
-                              label = paste0("E-value:\n (", round(evals()[1], 2), ",", round(evals()[1], 2),")"),
-                              nudge_x = evals()[1]*(3/5), size = 3) + 
-                    theme_minimal()
-            )
-            
-            g$x$data[[2]]$text <- "E-value"
-            g$x$data[[1]]$text <- gsub("y", "RR_UD", g$x$data[[1]]$text)
-            g$x$data[[1]]$text <- gsub("rr.eu", "RR_EU", g$x$data[[1]]$text)
+            g <- ggplot(data.frame(rr.eu = c(0, 20)), aes(rr.eu)) + 
+                stat_function(fun = rr.ud) + 
+                scale_y_continuous(limits = c(1, evals()[1]*3)) + 
+                scale_x_continuous(limits = c(1, evals()[1]*3)) +
+                xlab("Risk ratio for exposure-confounder relationship") + ylab("Risk ratio for confounder-outcome relationship") + 
+                geom_point(dat = data.frame(rr.eu = evals()[1], rr.ud = evals()[1]), aes(rr.eu, rr.ud)) +
+                geom_text(dat = data.frame(rr.eu = evals()[1], rr.ud = evals()[1]), 
+                          aes(rr.eu, rr.ud), 
+                          label = paste0("E-value:\n (", round(evals()[1], 2), ",", round(evals()[1], 2),")"),
+                          nudge_x = evals()[1]*(3/5), size = 3) + 
+                theme_minimal()
             
             return(g)
             
@@ -180,13 +174,13 @@ function(input, output, session) {
             # if we don't have point estimate, 
             # then show blank placeholder graph
             df = data.frame()
-            g = ggplotly( ggplot(df) +
-                              geom_point() +
-                              xlim(0, 10) +
-                              ylim(0, 10) +
-                              theme_minimal() +
-                              xlab("Risk ratio for exposure-confounder relationship") + ylab("Risk ratio for confounder-outcome relationship") + 
-                              annotate("text", x = 5, y = 5, label = "(Enter your point estimate)") )
+            g = ggplot(df) +
+                geom_point() +
+                xlim(0, 10) +
+                ylim(0, 10) +
+                theme_minimal() +
+                xlab("Risk ratio for exposure-confounder relationship") + ylab("Risk ratio for confounder-outcome relationship") + 
+                annotate("text", x = 5, y = 5, label = "(Enter your point estimate)") 
             return(g)
         }
     }) 
@@ -305,6 +299,7 @@ function(input, output, session) {
     }) ## closes calibrated_output
     
     calibrated_plot <- observeEvent(input$calibrated_plot, {
+        
         output$calibrated_plot1 = renderPlot({
             withProgress(message="Generating plot...", value=1,{
                 ### isolate on parameters to not update until action button pressed again
@@ -334,6 +329,7 @@ function(input, output, session) {
                 
                 withCallingHandlers({
                     shinyjs::html("calibrated_sens_plot_messages", "")
+                    browser()
                     sens_plot(method=method, type="line", q=q, yi.name=yi.name, vi.name=vi.name, Bmin=Bmin, Bmax=Bmax, tail=tail, give.CI=TRUE, R=R, dat=dat )
                 },
                 message = function(m){
