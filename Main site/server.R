@@ -236,6 +236,18 @@ function(input, output, session) {
             withProgress(message="Calculating...", value=1,{
                 withCallingHandlers({
                     shinyjs::html("calibrated_cm_messages", "")
+                    
+                    
+                    # check for minimal required input needed for all of the metrics
+                    if ( is.null(dat) ) stop("Must upload dataset in order to do analyses.")
+                    if ( yi.name == "" | vi.name == "" ) stop("Must provide variable names in dataset to do analyses.")
+                    if ( is.na(q) ) stop("Must provide threshold (q) to do analyses.")
+                    if ( is.na(muB) & is.na(r) ) stop("Must provide bias factor (to calculate proportion), r (to calculate second two metrics), or both.")
+                    
+                    # input required for only some metrics
+                    if ( is.na( muB ) ) message("Cannot calculate proportion unless you provide the bias factor.")
+                    
+                    #browser()
                     confounded_meta(method=method, muB=muB,q=q, r=r, yi.name=yi.name, vi.name=vi.name,
                                     tail=tail, give.CI=TRUE, R=R, dat=dat, simplifyWarnings = TRUE)
                 },
@@ -274,8 +286,13 @@ function(input, output, session) {
             
             
             ##### Create String for UI #####
-            string_Tmin = ifelse(p < r, "The proportion of meaningfully strong effects is already less than or equal to r even with no confounding, so this metric does not apply. No confounding at all is required to make the specified shift.", paste( Tmin, " (95% CI: ", Tmin_lo, ", ", Tmin_hi, ")", sep="" ))
-            string_Tmin = ifelse(is.na(string_Tmin), "Cannot compute second two metrics without r. Returning only the proportion.", string_Tmin)
+         
+            if ( Tmin == 1 ) {
+                string_Tmin = "The proportion of meaningfully strong effects is already less than or equal to r even with no confounding, so this metric does not apply. No confounding at all is required to make the specified shift." } else {
+                string_Tmin = paste( Tmin, " (95% CI: ", Tmin_lo, ", ", Tmin_hi, ")", sep="" )
+                }
+            
+            
             return( string_Tmin )
             
         }) ## closes calibrated_text2
@@ -290,9 +307,12 @@ function(input, output, session) {
             
             
             ##### Create String for UI #####
-            #bm
-            string_Gmin = ifelse(p < r, "The proportion of meaningfully strong effects is already less than or equal to r even with no confounding, so this metric does not apply. No confounding at all is required to make the specified shift.", paste( Gmin, " (95% CI: ", Gmin_lo, ", ", Gmin_hi, ")", sep="" ))
-            string_Gmin = ifelse(is.na(string_Gmin), "Cannot compute the second two metrics without r. Returning only the proportion.", string_Gmin)
+            
+            if ( Gmin == 1 ) {
+                string_Gmin = "The proportion of meaningfully strong effects is already less than or equal to r even with no confounding, so this metric does not apply. No confounding at all is required to make the specified shift." } else {
+                    string_Gmin = paste( Gmin, " (95% CI: ", Gmin_lo, ", ", Gmin_hi, ")", sep="" )
+                }
+            
             return( string_Gmin )
             
         }) ## closes calibrated_text3
@@ -312,6 +332,7 @@ function(input, output, session) {
                 R = isolate(input$calibrated_R)
                 dat = isolate(mydata())
                 
+                
                 if(scale=="RR"){
                     q = isolate(log(input$calibrated_q))
                     muB = isolate(log(input$calibrated_muB))
@@ -329,7 +350,10 @@ function(input, output, session) {
                 
                 withCallingHandlers({
                     shinyjs::html("calibrated_sens_plot_messages", "")
-                    browser()
+                    
+                    # check for required input
+                    if ( is.null(dat) ) stop("Must upload dataset in order to create plot.")
+                    
                     sens_plot(method=method, type="line", q=q, yi.name=yi.name, vi.name=vi.name, Bmin=Bmin, Bmax=Bmax, tail=tail, give.CI=TRUE, R=R, dat=dat )
                 },
                 message = function(m){
@@ -403,6 +427,17 @@ function(input, output, session) {
         parametric_cm <- reactive({
             withCallingHandlers({
                 shinyjs::html("parametric_cm_messages", "")
+                
+                # check for minimal required input needed for all of the metrics
+                if ( is.na(yr_2) | is.na(t2_2) | is.na(q_2) ) stop("Must provide at minimum the pooled effect size, heterogeneity, and threshold (q) to do analyses.")
+
+                 if ( ( is.na(muB_2) | is.na(sigB_2) ) & is.na(r_2) ) stop("To calculate the proportion, must provide bias factor and proportion of heterogeneity due to confounding. To calculate the second two metrics, must provide r.")
+                
+                # input required for only some metrics
+                if ( is.na( muB_2 ) ) message("Cannot calculate proportion unless you provide the bias factor.")
+                
+                
+                #browser()
                 confounded_meta(method=method_2,q=q_2, r=r_2, muB=muB_2, sigB=sigB_2, yr=yr_2, vyr=vyr_2,
                                 t2=t2_2, vt2=vt2_2, CI.level=0.95, tail=tail_2, simplifyWarnings = TRUE)
             },
@@ -431,16 +466,18 @@ function(input, output, session) {
         
         output$parametric_text2 = renderText({
             cm = req(parametric_cm())
-            
-            p = round( as.numeric(cm$Est[which(cm$Value=="Prop" )]), 3 )
+
             Tmin = round( as.numeric(cm$Est[which(cm$Value=="Tmin" )]), 3 )
             Tmin_lo = round( as.numeric(cm$CI.lo[which(cm$Value=="Tmin" )]), 3 )
             Tmin_hi = round( as.numeric(cm$CI.hi[which(cm$Value=="Tmin" )]), 3 )
             
             
             ##### Create String for UI #####
-            string_Tmin = ifelse(p < r_2, "The proportion of meaningfully strong effects is already less than or equal to r even with no confounding, so this metric does not apply. No confounding at all is required to make the specified shift.", paste( Tmin, " (95% CI: ", Tmin_lo, ", ", Tmin_hi, ")", sep="" ))
-            # string_Tmin = paste( Tmin, " (95% CI: ", Tmin_lo, ", ", Tmin_hi, ")", sep="" )
+            if ( Tmin == 1 ) {
+                string_Tmin = "The proportion of meaningfully strong effects is already less than or equal to r even with no confounding, so this metric does not apply. No confounding at all is required to make the specified shift." } else {
+                    string_Tmin = paste( Tmin, " (95% CI: ", Tmin_lo, ", ", Tmin_hi, ")", sep="" )
+                }
+
             return( string_Tmin )
             
         }) ## closes parametric_text2
@@ -448,14 +485,18 @@ function(input, output, session) {
         output$parametric_text3 = renderText({
             cm = req(parametric_cm())
             
-            p = round( as.numeric(cm$Est[ which(cm$Value=="Prop") ]), 3 )
+            #p = round( as.numeric(cm$Est[ which(cm$Value=="Prop") ]), 3 )
             Gmin = round( as.numeric(cm$Est[ which(cm$Value=="Gmin") ]), 3 )
             Gmin_lo = round( as.numeric(cm$CI.lo[ which(cm$Value=="Gmin") ]), 3 )
             Gmin_hi = round( as.numeric(cm$CI.hi[ which(cm$Value=="Gmin") ]), 3 )
             
             
             ##### Create String for UI #####
-            string_Gmin = ifelse(p < r_2, "The proportion of meaningfully strong effects is already less than or equal to r even with no confounding, so this metric does not apply. No confounding at all is required to make the specified shift.", paste( Gmin, " (95% CI: ", Gmin_lo, ", ", Gmin_hi, ")", sep="" ))
+            if ( Gmin == 1 ) {
+                string_Gmin = "The proportion of meaningfully strong effects is already less than or equal to r even with no confounding, so this metric does not apply. No confounding at all is required to make the specified shift." } else {
+                    string_Gmin = paste( Gmin, " (95% CI: ", Gmin_lo, ", ", Gmin_hi, ")", sep="" )
+                }
+            
             return( string_Gmin )
             
         }) ## closes parametric_text3

@@ -293,6 +293,7 @@ hr(),
                                                                      shinyInput_label_embed(
                                                                          shiny_iconlink() %>%
                                                                              bs_embed_popover(title = 'Used to adjust proportion by the provided bias factor')),
+                                                               
                                                                  numericInput('calibrated_q', 'Threshold (q) for meaningfully strong effect size \n(on scale you specified)', NA, min = 0, max = Inf, step = 0.01) %>%
 
                                                                      shinyInput_label_embed(
