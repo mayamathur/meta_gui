@@ -433,13 +433,22 @@ function(input, output, session) {
 
                  if ( ( is.na(muB_2) | is.na(sigB_2) ) & is.na(r_2) ) stop("To calculate the proportion, must provide bias factor and proportion of heterogeneity due to confounding. To calculate the second two metrics, must provide r.")
                 
+                # at this point, we know we have enough information to do some analyses
+                # warn about ones we can't do
                 # input required for only some metrics
-                if ( is.na( muB_2 ) ) message("Cannot calculate proportion unless you provide the bias factor.")
+                if ( is.na(muB_2) | is.na(sigB_2) ) message("Cannot calculate proportion unless you provide the bias factor.")
                 
                 
                 #browser()
-                confounded_meta(method=method_2,q=q_2, r=r_2, muB=muB_2, sigB=sigB_2, yr=yr_2, vyr=vyr_2,
+                res = confounded_meta(method=method_2,q=q_2, r=r_2, muB=muB_2, sigB=sigB_2, yr=yr_2, vyr=vyr_2,
                                 t2=t2_2, vt2=vt2_2, CI.level=0.95, tail=tail_2, simplifyWarnings = TRUE)
+                
+                # check for extreme Phat
+                Phat = res$Est[which(res$Value=="Prop")]
+                if ( !is.na(Phat) & ( Phat < 0.15 | Phat > 0.85 ) ) warning("The estimated proportion is less than 0.15 or greater than 0.85. Parametric confidence intervals may not perform well in this case. We would recommend using the robust estimation method instead.")
+                    
+                return(res)
+                
             },
             message = function(m){
                 shinyjs::html(id="parametric_cm_messages", html=paste0(m$message, '<br>'), add=TRUE)
@@ -502,20 +511,13 @@ function(input, output, session) {
         }) ## closes parametric_text3
         
         ### parametric_output warnings:
-        output$parametric_kwarn <- reactive({
-            numStudies <- input$parametric_k
-            ifelse(numStudies <=10,
-                   "WARNING: These methods may not work well for meta-analyses with fewer than 10 studies.",
-                   "")
-        }) ## closes parametric_kwarn_2
-        
-        output$parametric_phatwarn <- reactive({
-            cm = req(parametric_cm())
-            
-            p = round( cm$Est[ cm$Value=="Prop" ], 3 )
-            ifelse(p<0.15 | p>0.85,
-                   HTML(paste('WARNING: Extreme estimated proportion', 'The estimated proportion of meaningfully strong effects is <0.15 or >0.85. We recommend using the robust estimation method instead in this case.', sep = "<br/>")), "")
-        }) ## closes parametric_phatwarn_2
+        # output$parametric_phatwarn <- reactive({
+        #     cm = req(parametric_cm())
+        #     
+        #     p = round( cm$Est[ cm$Value=="Prop" ], 3 )
+        #     ifelse(p<0.15 | p>0.85,
+        #            HTML(paste('Warning: Extreme estimated proportion', 'The estimated proportion of meaningfully strong effects is <0.15 or >0.85. We recommend using the robust estimation method instead in this case.', sep = "<br/>")), "")
+        # }) ## closes parametric_phatwarn_2
         
     }) ## closes parametric_output
     

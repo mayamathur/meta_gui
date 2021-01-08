@@ -469,18 +469,11 @@ hr(),
                                   
                                   ### results text ###
 
-                                  wellPanel( textOutput("parametric_results_prop"), span( textOutput("parametric_text1") ),
-                                             # for "i" information icon, not currently in use
-                                             #, shiny_iconlink() %>% bs_embed_popover(title = "PLACEHOLDER INFORMATION ICON")
-                                             span( htmlOutput("parametric_phatwarn"), style="color:red")),
-                                  wellPanel( textOutput("parametric_results_minbias"), span( textOutput("parametric_text2") )
-                                             # for "i" information icon, not currently in use
-                                             #, shiny_iconlink() %>% bs_embed_popover(title = "PLACEHOLDER INFORMATION ICON")
-                                  ),
-                                  wellPanel( textOutput("parametric_results_minconf"), span( textOutput("parametric_text3") )
-                                             # for "i" information icon, not currently in use
-                                             #, shiny_iconlink() %>% bs_embed_popover(title = "PLACEHOLDER INFORMATION ICON")
-                                  ),
+                                  #bm
+                                  wellPanel( textOutput("parametric_results_prop"), span( textOutput("parametric_text1") ) ),
+                                  
+                                  wellPanel( textOutput("parametric_results_minbias"), span( textOutput("parametric_text2") ) ),
+                                  wellPanel( textOutput("parametric_results_minconf"), span( textOutput("parametric_text3") ) ),
                                   mainPanel(
                                       span( htmlOutput("parametric_cm_messages"), style="color:red"), width = 8
                                   ),
