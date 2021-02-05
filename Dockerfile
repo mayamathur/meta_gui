@@ -17,6 +17,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     libxt-dev \
     libssl-dev \
     libssh2-1-dev \
+    libxml2-dev \
     && rm -rf /var/lib/apt/lists/*
 
 # we need remotes and renv

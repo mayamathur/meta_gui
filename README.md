@@ -43,3 +43,14 @@ See the `.github/workflows/deploy.yml` file for additional options
 (`dockerfile_name`, `docker_options`, `dockerfile_directory`).
 
 Note: the GitHub action responsible for building and deploying the app to Heroku is failing when the app is not in the root directory.
+
+### Possible issues when applying this approach to other apps
+
+System requirements need to be updated if a package installation fails.
+E.g. I had to add `libxml2-dev` for the xml2 package.
+
+Solutions:
+
+- find the error log in GitHub action output: `Error: install of package 'xml2' failed`
+- find system dependencies (often listed near the error): `Configuration failed because libxml-2.0 was not found. Try installing: deb: libxml2-dev (Debian, Ubuntu, etc)`
+- if it is not listed, see https://github.com/rstudio/r-system-requirements or https://github.com/r-hub/sysreqsdb
