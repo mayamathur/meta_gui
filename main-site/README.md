@@ -42,3 +42,4 @@ following new repository secrets:
 See the `.github/workflows/deploy.yml` file for additional options
 (`dockerfile_name`, `docker_options`, `dockerfile_directory`).
 
+Note: the GitHub action responsible for building and deploying the app to Heroku is failing when the app is not in the root directory.
