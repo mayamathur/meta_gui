@@ -580,6 +580,12 @@ server <- function(input, output, session) {
         paste("Minimum confounding strength (RR scale) to reduce to less than", input$parametric_r, "the proportion of studies with population causal effects", input$parametric_tail, input$parametric_scale, "=", input$parametric_q, ":")
     })
     
+    ## prevent Heroku timeout
+    autoInvalidate <- reactiveTimer(intervalMs = 50*1000)
+    observe({
+        autoInvalidate()
+        cat(".")
+    })
     
     
 } ## closes server.R function
