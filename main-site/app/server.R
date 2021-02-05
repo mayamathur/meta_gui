@@ -1,7 +1,5 @@
 
-source("startup.R")
-
-function(input, output, session) {
+server <- function(input, output, session) {
     
     ##### For Tab Panel E-value #####
     evals <- reactive({
