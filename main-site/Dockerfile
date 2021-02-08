@@ -19,8 +19,8 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     libssh2-1-dev \
     && rm -rf /var/lib/apt/lists/*
 
-# we need remotes and renv
-RUN install2.r -e remotes renv
+# we need remotes and renv if using rocker/r-base
+#RUN install2.r -e remotes renv
 
 # create non root user
 RUN addgroup --system app \
