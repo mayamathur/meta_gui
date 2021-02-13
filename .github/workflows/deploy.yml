@@ -15,8 +15,13 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
 
-      - name: Build, Push and Release a Docker container to Heroku. # Your custom step name
-        uses: gonuit/heroku-docker-deploy@v1.2.0 # GitHub action name (leave it as it is).
+      # copy folder containing the app to the root of the repo
+      # this is needed b/c setting dockerfile_directory is not working
+      - name: Change directory
+        run: 'cp -R main-site/* .'
+
+      - name: Build, Push and Release a Docker container to Heroku
+        uses: gonuit/heroku-docker-deploy@v1.2.2
         with:
 
           # The email address associated with your Heroku account.
