@@ -79,6 +79,8 @@ server <- function(input, output, session) {
     
     output$result.text = renderText({
         
+        req(evals())
+        
         ##### Create String for UI ##### 
         
         #if there is input for the CI (either lower or upper)
