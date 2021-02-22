@@ -43,27 +43,3 @@ See the `.github/workflows/deploy.yml` file for additional options
 (`dockerfile_name`, `docker_options`, `dockerfile_directory`).
 
 Note: the GitHub action responsible for building and deploying the app to Heroku is failing when the app is not in the root directory.
-The work around is to copy the contents of the app folder into the root
-when building the image for Heroku, see the Change directory step in the
-`deploy.yml` file.
-
-### Having multiple Shiny apps in the same GitHub repo
-
-It is possible to copy the `deploy.yml` file (i.e. `deployApp2.yml`, etc.)
-in the `.github/workflows` folder. This will run multiple jobs.
-But this would lead to unnecessary re-deployments of apps that have not
-changed and are functioning fine.
-
-- Solution 1: add new apps as new git branches and make the action specific to that branch.
-- Solution 2: add new apps as new GitHub repos (sharing a prefix in their names).
-
-### Possible issues when applying this approach to other apps
-
-System requirements need to be updated if a package installation fails.
-E.g. I had to add `libxml2-dev` for the xml2 package.
-
-Solutions:
-
-- find the error log in GitHub action output: `Error: install of package 'xml2' failed`
-- find system dependencies (often listed near the error): `Configuration failed because libxml-2.0 was not found. Try installing: deb: libxml2-dev (Debian, Ubuntu, etc)`
-- if it is not listed, see https://github.com/rstudio/r-system-requirements or https://github.com/r-hub/sysreqsdb
